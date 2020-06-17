@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/16 01:31:54 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/16 19:00:37 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	init_data(t_data *data)
 	data->ea_text = NULL;
 	data->we_text = NULL;
 	data->s_text = NULL;
+	data->f_color = NULL;
+	data->c_color = NULL;
 }
 
 int		missing_data(t_ok_map *map)
@@ -69,7 +71,7 @@ int		check_res(char *line, t_data *data)
 	return (OK);
 }
 
-int		get_reso(t_ok_map *map, char *line, t_data *data) // re code split!
+int		get_reso(int *map_res, char *line, t_data *data) // re code split!
 {
 	int		i;
 
@@ -89,6 +91,7 @@ int		get_reso(t_ok_map *map, char *line, t_data *data) // re code split!
 	if (!(line[i] == '\0' && data->height > 0 && data->width > 0))// add return with ERR res incorrect
 		return (ERR_RES);
 	ft_printf("good res\n");
+	*map_res = 1;
 	return (OK);
 }
 
@@ -116,10 +119,31 @@ int		get_text(int *map_text, char *line, char **data_text)
 	return (OK);
 }
 
-int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actual func
+int		get_color(int *map_bool, char *line, char **data_color) // TODO rename all map to bool
 {
-	if (line[0] == 'R' && map->r == 0)
-		return (get_reso(map, line, data));
+	int		i;
+	char	*tmp;
+	char	**tmp2;
+
+	i = 0;
+	tmp = ft_strtrim(line + 1, " ");
+	tmp2 = ft_split(tmp, ',');
+	ft_printf("%s\n", tmp);
+	while (tmp2[i])
+	{
+		ft_printf("%s\n", ft_strtrim(tmp2[i], " "));
+		free(tmp2[i]);
+		i++;
+	}
+	free(tmp2);
+	free(tmp);
+}
+
+int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actual func
+// TODO fix, this shit is brojken if no space in between key and value
+{
+	if (!ft_strncmp(line, "R ", 2) && map->r == 0)
+		return (get_reso(&map->r, line, data));
 	else if (!ft_strncmp(line, "NO ", 3) && map->no == 0)
 		return (get_text(&map->no, line, &data->no_text));
 	else if (!ft_strncmp(line, "SO ", 3) && map->so == 0)
@@ -128,11 +152,11 @@ int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actua
 		return (get_text(&map->we, line, &data->we_text));
 	else if (!ft_strncmp(line, "EA ", 3) && map->ea == 0)
 		return (get_text(&map->ea, line, &data->ea_text));
-	else if (line[0] == 'S' && map->s == 0)
+	else if (!ft_strncmp(line, "S ", 2) && map->s == 0)
 		return (get_text(&map->s, line, &data->s_text));
-	else if (line[0] == 'F' && map->f == 0)
-		return (1);
-	else if (line[0] == 'C' && map->c == 0)
+	else if (!ft_strncmp(line, "F ", 2) && map->f == 0)
+		return (get_color(&map->f, line, &data->f_color));
+	else if (!ft_strncmp(line, "C ", 2)&& map->c == 0)
 		return (1);
 	else if(line[0] == '\n')
 		return (1);
@@ -201,6 +225,8 @@ int		main(int argc, char **argv)
 	free(data->ea_text);
 	free(data->so_text);
 	free(data->s_text);
+	free(data->f_color);
+	free(data->c_color);
 	free(data);
 	return (0);
 }
