@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/16 19:00:37 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/20 21:00:46 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		num_len(int num)
 	return (i);
 }
 
-int		check_res(char *line, t_data *data)
+int		check_res(char *line)
 {
 	int i;
 
@@ -76,7 +76,7 @@ int		get_reso(int *map_res, char *line, t_data *data) // re code split!
 	int		i;
 
 	//add check_res func here! if works keep goind else stop return bad reso
-	if (!check_res(line, data) == ERR_RES)
+	if (!check_res(line) == ERR_RES)
 		return (ERR_RES); // return Error\n invalid resolution
 	i = 1;
 	while (line[i] == ' ')
@@ -105,6 +105,7 @@ int		check_text(char *path)
 }
 
 int		get_text(int *map_text, char *line, char **data_text)
+//TODO check if need to create another error for sprite of s sprite
 {
 	int		i;
 
@@ -113,55 +114,143 @@ int		get_text(int *map_text, char *line, char **data_text)
 	i = 2;
 	while (line[i] == ' ')
 		i++;
-	*data_text = ft_strdup(line + i);
+	if (!(*data_text = ft_strdup(line + i)))
+		return (ERR_MAL);
 	*map_text = 1;
 	ft_printf("good text %d %s\n", *map_text, *data_text);
 	return (OK);
 }
 
-int		get_color(int *map_bool, char *line, char **data_color) // TODO rename all map to bool
+int		check_color(char *line) // erase if not used!!!
+{
+	int i;
+
+	i = 1;
+	while(line[i])
+	{
+		if (line[i] != ' ' && ft_isdigit(line[i]) == 0 && line[i] != ',')
+			return (ERR_F);
+		i++;
+	}
+	return (OK);
+}
+
+void	free_tab(char **tab)
+{
+	int i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+int		check_num_color(char *tmp) //try this pro more
+{
+	int i;
+
+	i = 0;
+	ft_printf("trying: %s\n", tmp);
+	while (tmp[i])
+	{
+		if (ft_isdigit(tmp[i]) == 0)
+		{
+			ft_printf("its a '%c'\n", tmp[i]);
+			return (ERR_F);
+		}
+		i++;
+	}
+	return (OK);
+}
+
+int		cast_color(char **tab, char **data_color)
 {
 	int		i;
 	char	*tmp;
-	char	**tmp2;
 
 	i = 0;
-	tmp = ft_strtrim(line + 1, " ");
-	tmp2 = ft_split(tmp, ',');
-	ft_printf("%s\n", tmp);
-	while (tmp2[i])
+	while (tab[i])
+	// malloc pro
+	// try and use num var instead of 100+ atois
+	// 255 10 0 should be ff0a00 --> add 0 if only one digit
 	{
-		ft_printf("%s\n", ft_strtrim(tmp2[i], " "));
-		free(tmp2[i]);
+		tmp = ft_strtrim(tab[i], " ");
+		if (check_num_color(tmp) == ERR_F || ft_atoi(tmp) > 255 ) // call free func here
+		{
+			free_tab(tab);
+			free(tmp);
+			return (ERR_F);
+		}
+		free(tab[i]);
+		if (ft_atoi(tmp) == 0)
+			tab[i] = ft_strdup("00");
+		else
+			tab[i] = ft_itoa_base(ft_atoi(tmp), "0123456789abcdef");
+		ft_printf("%s %s\n", tmp, tab[i]);
+		free(tmp);
 		i++;
 	}
-	free(tmp2);
-	free(tmp);
+	tmp = ft_strjoin(tab[0], tab[1]);
+	*data_color = ft_strjoin(tmp, tab[2]);
+	ft_printf("%s %s\n", tmp, *data_color);
+	free (tmp);
+	free_tab(tab);
+}
+
+int		get_color(int *map_bool, char *line, char **data_color)
+// TODO rename all map to bool
+// malloc protection
+{
+	int		i;
+	char	**tab;
+
+	tab = ft_split(line + 1, ','); // & here
+	i = 0;
+	while (tab[i])
+		i++;
+	ft_printf("len of list: %d\n", i);
+	if (i != 3) // free everything in tab b4 get this out of here // call free func here
+	{
+		free_tab(tab);
+		return (ERR_F);
+	}
+	return (cast_color(tab, data_color));
 }
 
 int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actual func
 // TODO fix, this shit is brojken if no space in between key and value
 {
+	int ret_code; // this func will get the ret of the other func and handle if error
+	// TODO change all return to ret_code
+
+	ret_code = 0;
 	if (!ft_strncmp(line, "R ", 2) && map->r == 0)
-		return (get_reso(&map->r, line, data));
+		ret_code = get_reso(&map->r, line, data);
 	else if (!ft_strncmp(line, "NO ", 3) && map->no == 0)
-		return (get_text(&map->no, line, &data->no_text));
+		ret_code = get_text(&map->no, line, &data->no_text);
 	else if (!ft_strncmp(line, "SO ", 3) && map->so == 0)
-		return (get_text(&map->so, line, &data->so_text));
+		ret_code = get_text(&map->so, line, &data->so_text);
 	else if (!ft_strncmp(line, "WE ", 3) && map->we == 0)
-		return (get_text(&map->we, line, &data->we_text));
+		ret_code = get_text(&map->we, line, &data->we_text);
 	else if (!ft_strncmp(line, "EA ", 3) && map->ea == 0)
-		return (get_text(&map->ea, line, &data->ea_text));
+		ret_code = get_text(&map->ea, line, &data->ea_text);
 	else if (!ft_strncmp(line, "S ", 2) && map->s == 0)
-		return (get_text(&map->s, line, &data->s_text));
+		ret_code = get_text(&map->s, line, &data->s_text);
 	else if (!ft_strncmp(line, "F ", 2) && map->f == 0)
-		return (get_color(&map->f, line, &data->f_color));
+		ret_code = get_color(&map->f, line, &data->f_color);
 	else if (!ft_strncmp(line, "C ", 2)&& map->c == 0)
-		return (1);
-	else if(line[0] == '\n')
-		return (1);
-	
-	//ft_printf("%d\n", ft_strncmp(line, "NO", 2));
+		ret_code = OK; // get color here
+	else if(line[0] == ' ' || line[0] == ' ') // in case of empty line in the file
+		ret_code = OK; // call map func here
+	else if(line[0] == '\0') // in case of empty line in the file
+		ret_code = OK;
+	else
+		ret_code = ERR_INV_KEY;
+	//ft_printf("ret of line: %d\n", ret_code);
+	return (ret_code);
 }
 
 int		read_file(int fd, t_ok_map *map, t_data *data) // uncomment to use ft_split

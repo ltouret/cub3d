@@ -5,7 +5,7 @@ SO ./textures/wood.xpm
 EA ./textures/redbrick.xpm
 S ./textures/barrel.xpm
 
-F 30, 0, 0
+F 255,10,0
 C 0,200,250
 
         1111111111111111111111111111

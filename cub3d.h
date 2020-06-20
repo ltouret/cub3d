@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/16 18:59:40 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/18 08:59:56 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define ERR_TEXT 3
 # define ERR_F 4
 //# define ERR_MISSING_ELEM
-//# define ERR_INVALID_KEY
+# define ERR_INV_KEY 14
 # define ERR_MAL 21
 
 typedef struct		s_ok_map
