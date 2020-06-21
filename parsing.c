@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/21 23:27:54 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/22 01:15:05 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,27 +109,37 @@ int		get_text(int *map_text, char *line, char **data_text)
 {
 	int		i;
 
-	if (check_text(line) == ERR_TEXT)
-		return (ERR_TEXT); 
 	i = 2;
 	while (line[i] == ' ')
 		i++;
+	if (check_text(line + i) == ERR_TEXT)
+		return (ERR_TEXT); 
 	if (!(*data_text = ft_strdup(line + i)))
 		return (ERR_MAL);
 	*map_text = 1;
-	ft_printf("good text %d %s\n", *map_text, *data_text);
 	return (OK);
 }
 
-void	free_tab(char **tab)
+void	free_tab(char **tab, int index)
 {
 	int i;
 
 	i = 0;
-	while (tab[i])
+	if (index == 0)
 	{
-		free(tab[i]);
-		i++;
+		while (tab[i])
+		{
+			free(tab[i]);
+			i++;
+		}
+	}
+	else
+	{
+		while (i < index)
+		{
+			free(tab[i]);
+			i++;
+		}
 	}
 	free(tab);
 }
@@ -139,25 +149,21 @@ int		check_color(char *tmp) //try this pro more
 	int i;
 
 	i = 0;
-	ft_printf("trying: %s\n", tmp);
 	while (tmp[i])
 	{
 		if (ft_isdigit(tmp[i]) == 0)
-		{
-			ft_printf("its a '%c'\n", tmp[i]);
 			return (ERR_F);
-		}
 		i++;
 	}
 	return (OK);
 }
 
 int		write_color(char **str, int num)
-// malloc pro
 {
 	char	*tmp;
 	int		ret_code;
 
+	free(*str);
 	if (num < 16)
 	{
 		tmp = ft_itoa_base(num, "0123456789abcdef");
@@ -166,8 +172,7 @@ int		write_color(char **str, int num)
 	}
 	else
 		*str = ft_itoa_base(num, "0123456789abcdef");
-	//ft_printf("%s %s %d\n", tmp, *str);
-	if (str == NULL)
+	if (*str == NULL)
 		return (ERR_MAL);
 	return (OK);
 }
@@ -179,50 +184,66 @@ void	ft_free(const char *str, ...) // try and do a multiple param free?
 int		cast_color(char **tab, char **data_color)
 {
 	int		i;
-	int		ret_code;
 	char	*tmp;
 
 	i = -1;
 	while (tab[++i])
 	{
-		if (!(tmp = ft_strtrim(tab[i], " ")))
-			return (ERR_MAL);
-		if (check_color(tmp) == ERR_F || ft_atoi(tmp) > 255)
+		if (check_color(tab[i]) == ERR_F || ft_atoi(tab[i]) > 255)
 		{
-			free_tab(tab);
-			free(tmp);
+			free_tab(tab, 3);
 			return (ERR_F);
 		}
-		free(tab[i]);
-		ret_code = write_color(&tab[i], ft_atoi(tmp));
-		free(tmp);
+		if (write_color(&tab[i], ft_atoi(tab[i])) == ERR_MAL)
+		{
+			free_tab(tab, 3);
+			return (ERR_MAL);
+		}
 	}
 	tmp = ft_strjoin(tab[0], tab[1]);
 	*data_color = ft_strjoin(tmp, tab[2]);
 	free(tmp);
-	free_tab(tab);
+	free_tab(tab, 3);
 	if (*data_color == NULL)
-		ret_code = ERR_MAL;
-	return (ret_code);
+		return (ERR_MAL);
+	return (OK);
 }
 
-int		get_color(int *map_bool, char *line, char **data_color)
-// TODO rename all map to bool
-// malloc protection
+int		count_tab(char **tab)
 {
 	int		i;
-	char	**tab;
 
-	tab = ft_split(line + 1, ','); // & here
 	i = 0;
 	while (tab[i])
 		i++;
-	ft_printf("len of list: %d\n", i);
-	if (i != 3) // free everything in tab b4 get this out of here // call free func here
+	return (i);
+}
+
+int		get_color(int *map_bool, char *line, char **data_color)
+{
+	int		i;
+	char	*tmp;
+	char	**tab;
+
+	if (!(tab = ft_split(line + 1, ','))) // & here
+		return (ERR_MAL);
+	if (count_tab(tab) != 3) // free everything in tab b4 get this out of here // call free func here
 	{
-		free_tab(tab);
+		free_tab(tab, 0);
 		return (ERR_F);
 	}
+	i = -1;
+	while (tab[++i])
+	{
+		if (!(tmp = ft_strtrim(tab[i], " ")))
+		{
+			free_tab(tab, 3);
+			return (ERR_MAL);
+		}
+		free(tab[i]);
+		tab[i] = tmp;
+	}
+	*map_bool = 1;
 	return (cast_color(tab, data_color));
 }
 
@@ -247,9 +268,9 @@ int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actua
 		ret_code = get_text(&map->s, line, &data->s_text);
 	else if (!ft_strncmp(line, "F ", 2) && map->f == 0)
 		ret_code = get_color(&map->f, line, &data->f_color);
-	else if (!ft_strncmp(line, "C ", 2)&& map->c == 0)
-		ret_code = OK; // get color here
-	else if(line[0] == ' ' || line[0] == ' ') // in case of empty line in the file
+	else if (!ft_strncmp(line, "C ", 2) && map->c == 0)
+		ret_code = get_color(&map->c, line, &data->c_color);
+	else if(line[0] == ' ' || line[0] == '1') //in case of map 
 		ret_code = OK; // call map func here
 	else if(line[0] == '\0') // in case of empty line in the file
 		ret_code = OK;

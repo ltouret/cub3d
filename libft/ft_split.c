@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 10:43:30 by ltouret           #+#    #+#             */
-/*   Updated: 2019/10/25 16:15:46 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/22 00:24:36 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	**if_err(char **arr)
 	i = -1;
 	while (arr[++i])
 		free(arr[i]);
+	free(arr);
+	arr = NULL;
 	return (arr);
 }
 
