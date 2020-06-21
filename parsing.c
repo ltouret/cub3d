@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/20 21:00:46 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/21 23:27:54 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,20 +121,6 @@ int		get_text(int *map_text, char *line, char **data_text)
 	return (OK);
 }
 
-int		check_color(char *line) // erase if not used!!!
-{
-	int i;
-
-	i = 1;
-	while(line[i])
-	{
-		if (line[i] != ' ' && ft_isdigit(line[i]) == 0 && line[i] != ',')
-			return (ERR_F);
-		i++;
-	}
-	return (OK);
-}
-
 void	free_tab(char **tab)
 {
 	int i;
@@ -148,7 +134,7 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-int		check_num_color(char *tmp) //try this pro more
+int		check_color(char *tmp) //try this pro more
 {
 	int i;
 
@@ -166,38 +152,58 @@ int		check_num_color(char *tmp) //try this pro more
 	return (OK);
 }
 
+int		write_color(char **str, int num)
+// malloc pro
+{
+	char	*tmp;
+	int		ret_code;
+
+	if (num < 16)
+	{
+		tmp = ft_itoa_base(num, "0123456789abcdef");
+		*str = ft_strjoin("0", tmp);
+		free(tmp);
+	}
+	else
+		*str = ft_itoa_base(num, "0123456789abcdef");
+	//ft_printf("%s %s %d\n", tmp, *str);
+	if (str == NULL)
+		return (ERR_MAL);
+	return (OK);
+}
+
+void	ft_free(const char *str, ...) // try and do a multiple param free?
+{
+}
+
 int		cast_color(char **tab, char **data_color)
 {
 	int		i;
+	int		ret_code;
 	char	*tmp;
 
-	i = 0;
-	while (tab[i])
-	// malloc pro
-	// try and use num var instead of 100+ atois
-	// 255 10 0 should be ff0a00 --> add 0 if only one digit
+	i = -1;
+	while (tab[++i])
 	{
-		tmp = ft_strtrim(tab[i], " ");
-		if (check_num_color(tmp) == ERR_F || ft_atoi(tmp) > 255 ) // call free func here
+		if (!(tmp = ft_strtrim(tab[i], " ")))
+			return (ERR_MAL);
+		if (check_color(tmp) == ERR_F || ft_atoi(tmp) > 255)
 		{
 			free_tab(tab);
 			free(tmp);
 			return (ERR_F);
 		}
 		free(tab[i]);
-		if (ft_atoi(tmp) == 0)
-			tab[i] = ft_strdup("00");
-		else
-			tab[i] = ft_itoa_base(ft_atoi(tmp), "0123456789abcdef");
-		ft_printf("%s %s\n", tmp, tab[i]);
+		ret_code = write_color(&tab[i], ft_atoi(tmp));
 		free(tmp);
-		i++;
 	}
 	tmp = ft_strjoin(tab[0], tab[1]);
 	*data_color = ft_strjoin(tmp, tab[2]);
-	ft_printf("%s %s\n", tmp, *data_color);
-	free (tmp);
+	free(tmp);
 	free_tab(tab);
+	if (*data_color == NULL)
+		ret_code = ERR_MAL;
+	return (ret_code);
 }
 
 int		get_color(int *map_bool, char *line, char **data_color)
