@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/22 01:15:05 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/22 19:13:19 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ int		check_text(char *path)
 }
 
 int		get_text(int *map_text, char *line, char **data_text)
-//TODO check if need to create another error for sprite of s sprite
 {
 	int		i;
 
@@ -152,7 +151,7 @@ int		check_color(char *tmp) //try this pro more
 	while (tmp[i])
 	{
 		if (ft_isdigit(tmp[i]) == 0)
-			return (ERR_F);
+			return (ERR_COLOR);
 		i++;
 	}
 	return (OK);
@@ -181,7 +180,8 @@ void	ft_free(const char *str, ...) // try and do a multiple param free?
 {
 }
 
-int		cast_color(char **tab, char **data_color)
+int		cast_color(char **tab, char **data_color, int *map_bool)
+//TODO add usage of ERR_W_COLOR if > 255
 {
 	int		i;
 	char	*tmp;
@@ -189,10 +189,10 @@ int		cast_color(char **tab, char **data_color)
 	i = -1;
 	while (tab[++i])
 	{
-		if (check_color(tab[i]) == ERR_F || ft_atoi(tab[i]) > 255)
+		if (check_color(tab[i]) == ERR_COLOR || ft_atoi(tab[i]) > 255)
 		{
 			free_tab(tab, 3);
-			return (ERR_F);
+			return (ERR_COLOR);
 		}
 		if (write_color(&tab[i], ft_atoi(tab[i])) == ERR_MAL)
 		{
@@ -206,6 +206,7 @@ int		cast_color(char **tab, char **data_color)
 	free_tab(tab, 3);
 	if (*data_color == NULL)
 		return (ERR_MAL);
+	*map_bool = 1;
 	return (OK);
 }
 
@@ -220,17 +221,18 @@ int		count_tab(char **tab)
 }
 
 int		get_color(int *map_bool, char *line, char **data_color)
+//TODO add error diff error for ceiling | floor
 {
 	int		i;
 	char	*tmp;
 	char	**tab;
 
-	if (!(tab = ft_split(line + 1, ','))) // & here
+	if (!(tab = ft_split(line + 1, ',')))
 		return (ERR_MAL);
-	if (count_tab(tab) != 3) // free everything in tab b4 get this out of here // call free func here
+	if (count_tab(tab) != 3)
 	{
 		free_tab(tab, 0);
-		return (ERR_F);
+		return (ERR_COLOR);
 	}
 	i = -1;
 	while (tab[++i])
@@ -243,15 +245,13 @@ int		get_color(int *map_bool, char *line, char **data_color)
 		free(tab[i]);
 		tab[i] = tmp;
 	}
-	*map_bool = 1;
-	return (cast_color(tab, data_color));
+	return (cast_color(tab, data_color, map_bool));
 }
 
 int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actual func
 // TODO fix, this shit is brojken if no space in between key and value
 {
 	int ret_code; // this func will get the ret of the other func and handle if error
-	// TODO change all return to ret_code
 
 	ret_code = 0;
 	if (!ft_strncmp(line, "R ", 2) && map->r == 0)

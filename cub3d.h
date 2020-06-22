@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/18 08:59:56 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/22 19:12:14 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 # define OK 1
 # define ERR_RES 2
 # define ERR_TEXT 3
-# define ERR_F 4
+# define ERR_COLOR 4
+# define ERR_W_COLOR 5 // use this if > 255
 //# define ERR_MISSING_ELEM
 # define ERR_INV_KEY 14
 # define ERR_MAL 21
