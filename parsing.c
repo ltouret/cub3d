@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/22 19:13:19 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/06/23 19:01:42 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	init_data(t_data *data)
 	data->s_text = NULL;
 	data->f_color = NULL;
 	data->c_color = NULL;
+	data->map = NULL;
 }
 
 int		missing_data(t_ok_map *map)
@@ -119,7 +120,7 @@ int		get_text(int *map_text, char *line, char **data_text)
 	return (OK);
 }
 
-void	free_tab(char **tab, int index)
+int	free_tab(char **tab, int index)
 {
 	int i;
 
@@ -141,6 +142,7 @@ void	free_tab(char **tab, int index)
 		}
 	}
 	free(tab);
+	return (OK);
 }
 
 int		check_color(char *tmp) //try this pro more
@@ -181,7 +183,7 @@ void	ft_free(const char *str, ...) // try and do a multiple param free?
 }
 
 int		cast_color(char **tab, char **data_color, int *map_bool)
-//TODO add usage of ERR_W_COLOR if > 255
+//TODO add usage of ERR_INV_COLOR if > 255
 {
 	int		i;
 	char	*tmp;
@@ -189,16 +191,12 @@ int		cast_color(char **tab, char **data_color, int *map_bool)
 	i = -1;
 	while (tab[++i])
 	{
-		if (check_color(tab[i]) == ERR_COLOR || ft_atoi(tab[i]) > 255)
-		{
-			free_tab(tab, 3);
+		if (check_color(tab[i]) == ERR_COLOR && free_tab(tab, 3))
 			return (ERR_COLOR);
-		}
-		if (write_color(&tab[i], ft_atoi(tab[i])) == ERR_MAL)
-		{
-			free_tab(tab, 3);
+		if (ft_atoi(tab[i]) > 255 && free_tab(tab, 3))
+			return (ERR_INV_COLOR);
+		if (write_color(&tab[i], ft_atoi(tab[i])) == ERR_MAL && free_tab(tab, 3))
 			return (ERR_MAL);
-		}
 	}
 	tmp = ft_strjoin(tab[0], tab[1]);
 	*data_color = ft_strjoin(tmp, tab[2]);
@@ -221,7 +219,6 @@ int		count_tab(char **tab)
 }
 
 int		get_color(int *map_bool, char *line, char **data_color)
-//TODO add error diff error for ceiling | floor
 {
 	int		i;
 	char	*tmp;
@@ -248,6 +245,32 @@ int		get_color(int *map_bool, char *line, char **data_color)
 	return (cast_color(tab, data_color, map_bool));
 }
 
+int		map_last(map)
+// checks if map is the last element of the file
+{
+	
+}
+
+int		map_start(char *line)
+{
+	int		i;
+	int		ret_code;
+
+	i = 0;
+	ret_code = ERR;
+	while (line[i] == ' ')
+		i++;
+	if (line[i] == '1')
+		ret_code = OK;
+	return (ret_code);
+}
+
+int		get_map(int *map_bool, char *line, char **map)
+//TODO funct that checks if first char after white spaces is a 1
+{
+	//ft_printf("%s\n", line);
+}
+
 int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actual func
 // TODO fix, this shit is brojken if no space in between key and value
 {
@@ -270,8 +293,8 @@ int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actua
 		ret_code = get_color(&map->f, line, &data->f_color);
 	else if (!ft_strncmp(line, "C ", 2) && map->c == 0)
 		ret_code = get_color(&map->c, line, &data->c_color);
-	else if(line[0] == ' ' || line[0] == '1') //in case of map 
-		ret_code = OK; // call map func here
+	else if(map_start(line) == OK && map_last(map)) //in case of map add if only at the end of file!!!!!
+		ret_code = get_map(&map->map, line, data->map); // call map func here
 	else if(line[0] == '\0') // in case of empty line in the file
 		ret_code = OK;
 	else
@@ -309,26 +332,79 @@ int		read_file(int fd, t_ok_map *map, t_data *data) // uncomment to use ft_split
 	}
 }
 
+int		check_file_typ(char *filename)
+{
+	int		i;
+
+	i = ft_strlen(filename) - 4;
+	if (filename[i] == '.')
+	{
+		i++;
+		if (filename[i] == 'c')
+		{
+			i++;
+			if (filename[i] == 'u')
+			{
+				i++;
+				if (filename[i] == 'b')
+				{
+					return (OK);
+				}
+			}
+		}
+	}
+	ft_printf("wrong file name\n");
+	return (ERR_INV_FILE_NAME);
+}
+
+int		open_fd(char *filename)
+{
+	int		fd;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+		return (ERR_NO_FILE); // return 
+	return (fd);
+}
+
+int		handle_args(int argc, char **argv)
+//TODO keep argv[1] (filename) in memory in struct
+{
+	if (argc < 2)
+	{
+		ft_printf("not enough args\n");
+		return (ERR_FEW_ARG); // change TOO FEW ARGS
+	}
+	else if (argc > 3)
+	{
+		ft_printf("too many args\n"); // change TOO MANY ARGS
+		return (ERR_MANY_ARG);
+	}
+	return (OK);
+}
+
 int		main(int argc, char **argv)
 {
 	t_ok_map	*map;
 	t_data		*data;
 	int			fd;
 
+
+	if (handle_args(argc, argv) != OK)
+		return (handle_args(argc, argv));
+	if (check_file_typ(argv[1]) == ERR_INV_FILE_NAME)
+		return (ERR_INV_FILE_NAME);
+	fd = open_fd(argv[1]);
+	if (fd == ERR_NO_FILE)
+	{
+		ft_printf("no file\n");
+		return (ERR_NO_FILE); // return ERR_NO_FILE
+	}
+
 	if (!(map = malloc(sizeof(t_ok_map))))
 		return (0);
 	if (!(data = malloc(sizeof(t_data))))
 		return (0);
-
-	//fd = open("maps/map.cub", O_RDONLY);
-	fd = open("maps/file.cub", O_RDONLY);
-	//fd = open("maps/file_error.cub", O_RDONLY);
-	if (fd == -1)
-	{
-		// call error func for frees here
-		free(map);
-		return (0); // return ERR_FILE_DOESN_EXIST
-	}
 	init_t_map(map);
 	init_data(data);
 	read_file(fd, map, data);
@@ -343,6 +419,7 @@ int		main(int argc, char **argv)
 	free(data->s_text);
 	free(data->f_color);
 	free(data->c_color);
+	free(data->map);
 	free(data);
 	return (0);
 }
