@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/01 01:56:54 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/01 20:19:05 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	init_t_map(t_ok_map *map)
 	map->f = 0;
 	map->c = 0;
 	map->player = 0;
-	map->map = 0;
 	map->map_sta = 0;
+	map->map_end = 0;
 	//ft_printf("init done\n");
 }
 
@@ -45,6 +45,28 @@ void	init_data(t_data *data)
 
 int		missing_data(t_ok_map *map)
 {
+
+	if (map->r == 0)
+		return (ERR_MISS_R);
+	if (map->no == 0)
+		return (ERR_MISS_NO);
+	if (map->so == 0)
+		return (ERR_MISS_SO);
+	if (map->we == 0)
+		return (ERR_MISS_WE);
+	if (map->ea == 0)
+		return (ERR_MISS_EA);
+	if (map->s == 0)
+		return (ERR_MISS_S);
+	if (map->f == 0)
+		return (ERR_MISS_F);
+	if (map->c == 0)
+		return (ERR_MISS_C);
+	if (map->map_sta == 0)
+		return (ERR_MISS_MAP);
+	if (map->player == 0)
+		return (ERR_MISS_PLA);
+	return (OK);
 }
 
 int		num_len(int num)
@@ -126,6 +148,8 @@ int	free_tab(char **tab, int index)
 {
 	int i;
 
+	if (tab == NULL)
+		return (OK);
 	i = 0;
 	if (index == 0)
 	{
@@ -263,7 +287,7 @@ int		check_map(char *line, t_ok_map *map)
 	int		i;
 	
 	i = 0;
-	if (line[i])
+	while (line[i])
 	{
 		if (!ft_strchr("012NSWE ", line[i]))
 			return (ERR_INV_MAP);
@@ -274,6 +298,7 @@ int		check_map(char *line, t_ok_map *map)
 			else
 				return (ERR_MANY_PLAYER);
 		}
+		i++;
 	}
 	map->map_sta = 1;
 	return (OK);
@@ -289,7 +314,7 @@ int		map_start(char *line)
 	ret_code = ERR;
 	while (line[i] == ' ')
 		i++;
-	if (line[i] == '1')
+	if (line[i] == '1' || line[i] == '0')
 		ret_code = OK;
 	return (ret_code);
 }
@@ -299,7 +324,7 @@ int		get_map(t_ok_map *map, char *line, t_data *data)
 	int		i;
 	char	**tmp;
 
-	if (i = check_map(line, map) != OK)
+	if ((i = check_map(line, map)) != OK)
 		return (i);
 	if (!data->map)
 	{
@@ -323,12 +348,42 @@ int		get_map(t_ok_map *map, char *line, t_data *data)
 	return (OK);
 }
 
+int		check_dup(t_ok_map *map, char *line)
+{
+	int		ret_code;
+
+	ret_code = OK;
+	if (!ft_strncmp(line, "R ", 2) && map->r == 1)
+		ret_code = ERR_DUP_KEY; 
+	else if (!ft_strncmp(line, "NO ", 3) && map->no == 1)
+		ret_code = ERR_DUP_KEY; 
+	else if (!ft_strncmp(line, "SO ", 3) && map->so == 1)
+		ret_code = ERR_DUP_KEY; 
+	else if (!ft_strncmp(line, "WE ", 3) && map->we == 1)
+		ret_code = ERR_DUP_KEY; 
+	else if (!ft_strncmp(line, "EA ", 3) && map->ea == 1)
+		ret_code = ERR_DUP_KEY; 
+	else if (!ft_strncmp(line, "S ", 2) && map->s == 1)
+		ret_code = ERR_DUP_KEY; 
+	else if (!ft_strncmp(line, "F ", 2) && map->f == 1)
+		ret_code = ERR_DUP_KEY; 
+	else if (!ft_strncmp(line, "C ", 2) && map->c == 1)
+		ret_code = ERR_DUP_KEY; 
+	return (ret_code);
+}
+
 int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actual func
 // TODO fix, this shit is brojken if no space in between key and value
+// TODO how to handle case that map starts with 0? send error now or later with check mvalid map?
 {
 	int ret_code; // this func will get the ret of the other func and handle if error
 
 	ret_code = 0;
+	if (check_dup(map, line) == ERR_DUP_KEY) // maybe get this in read_file func?
+	{
+		ft_printf("ret of line: %d\n", ERR_DUP_KEY);
+		return (ERR_DUP_KEY);
+	}
 	if (!ft_strncmp(line, "R ", 2) && map->r == 0 && map->map_sta == 0)
 		ret_code = get_reso(&map->r, line, data);
 	else if (!ft_strncmp(line, "NO ", 3) && map->no == 0 && map->map_sta == 0)
@@ -345,21 +400,26 @@ int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actua
 		ret_code = get_color(&map->f, line, &data->f_color);
 	else if (!ft_strncmp(line, "C ", 2) && map->c == 0 && map->map_sta == 0)
 		ret_code = get_color(&map->c, line, &data->c_color);
-	else if (map_start(line) == OK) //in case of map add if only at the end of file!!!!!
+	else if (map_start(line) == OK && map->map_end != 1) //in case of map add if only at the end of file!!!!!
 		ret_code = get_map(map, line, data); // call map func here
-	else if (map->map_sta == 1 && line[0] != '\0')
-		ret_code = 11;
+	else if (map->map_end == 1 && line[0] != '\0') //map not last
+		ret_code = ERR_MAP_NOT_LAST;
 	else if (line[0] == '\0') // in case of empty line in the file
+	{
 		ret_code = OK;
+		if (map->map_sta == 1)
+			map->map_end = 1;
+	}
 	else
 		ret_code = ERR_INV_KEY;
-	ft_printf("ret of line: %d\n", ret_code);
+	//ft_printf("ret of line: %d\n", ret_code);
 	return (ret_code);
 }
 
 int		read_file(int fd, t_ok_map *map, t_data *data) // uncomment to use ft_split
 {
 	int		gnl;
+	int		ret_code;
 	char	*line;
 	//char **arr;
 
@@ -374,7 +434,12 @@ int		read_file(int fd, t_ok_map *map, t_data *data) // uncomment to use ft_split
 		//arr = ft_split(line + 1, ' ');
 		//line = ft_strtrim(line, "\f\t \n\r\v"); //trim or not trim spaces?
 		ft_printf("%s\n", line);
-		parsing(map, line, data);
+		if ((ret_code = parsing(map, line, data)) != OK)
+		{
+			free(line);
+			ft_printf("%d\n", ret_code);
+			return (ret_code);
+		}
 		free(line);
 		/*while (arr[i] != NULL)
 		{
@@ -385,6 +450,18 @@ int		read_file(int fd, t_ok_map *map, t_data *data) // uncomment to use ft_split
 		free(arr);
 		gnl = 0;*/
 	}
+	if ((ret_code = missing_data(map)) != OK)
+	{
+		ft_printf("%d\n", ret_code);
+		return (ret_code);
+	}
+	/*
+	ft_printf("Parsed map is:\n");
+	while (data->map[gnl])
+	{
+		ft_printf("%s\n", data->map[gnl++]);
+	}
+	*/
 }
 
 int		check_file_typ(char *filename)
@@ -438,7 +515,7 @@ int		handle_args(int argc, char **argv)
 	}
 	if (argc == 3 && ft_strcmp("--save", argv[2]) != 0)
 	{
-		ft_printf("wrong 2second arg not --save\n");
+		ft_printf("wrong second arg not --save\n");
 		return (ERR_INV_ARG);
 	}
 	return (OK);
