@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/23 19:01:42 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/01 01:56:54 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ void	init_t_map(t_ok_map *map)
 	map->s = 0;
 	map->f = 0;
 	map->c = 0;
+	map->player = 0;
 	map->map = 0;
-	ft_printf("init done\n");
+	map->map_sta = 0;
+	//ft_printf("init done\n");
 }
 
 void	init_data(t_data *data)
@@ -88,10 +90,10 @@ int		get_reso(int *map_res, char *line, t_data *data) // re code split!
 		i++;
 	data->height = ft_atoi(line + i);
 	i += num_len(data->height);
-	ft_printf("wid %d - hei %d\n", data->width, data->height);
-	if (!(line[i] == '\0' && data->height > 0 && data->width > 0))// add return with ERR res incorrect
+	//ft_printf("wid %d - hei %d\n", data->width, data->height);
+	if (!(line[i] == '\0' && data->height > 0 && data->width > 0))// add return with ERR res incorrect MAYBE MOT NEEDED THE \0
 		return (ERR_RES);
-	ft_printf("good res\n");
+	//ft_printf("good res\n");
 	*map_res = 1;
 	return (OK);
 }
@@ -245,13 +247,40 @@ int		get_color(int *map_bool, char *line, char **data_color)
 	return (cast_color(tab, data_color, map_bool));
 }
 
-int		map_last(map)
+int		map_last(t_ok_map *map)
 // checks if map is the last element of the file
+// this shit is worng!
 {
+	if (map->r && map->no && map->so && map->we && map->ea && map->s && map->f
+		&& map->c)
+		return (OK);
+	ft_printf("map not last!\n");
+	return (ERR); // return error of ERR_MAP_NOT_LAST
+}
+
+int		check_map(char *line, t_ok_map *map)
+{
+	int		i;
 	
+	i = 0;
+	if (line[i])
+	{
+		if (!ft_strchr("012NSWE ", line[i]))
+			return (ERR_INV_MAP);
+		if (ft_strchr("NSWE", line[i]))
+		{
+			if (map->player == 0)
+				map->player = 1;
+			else
+				return (ERR_MANY_PLAYER);
+		}
+	}
+	map->map_sta = 1;
+	return (OK);
 }
 
 int		map_start(char *line)
+//TODO check the return code of this. seems fishy
 {
 	int		i;
 	int		ret_code;
@@ -265,10 +294,33 @@ int		map_start(char *line)
 	return (ret_code);
 }
 
-int		get_map(int *map_bool, char *line, char **map)
-//TODO funct that checks if first char after white spaces is a 1
+int		get_map(t_ok_map *map, char *line, t_data *data)
 {
-	//ft_printf("%s\n", line);
+	int		i;
+	char	**tmp;
+
+	if (i = check_map(line, map) != OK)
+		return (i);
+	if (!data->map)
+	{
+		if (!(data->map = malloc(sizeof(char *) * 1)))
+			return (ERR_MAL);
+		data->map[0] = NULL; 
+	}
+	i = 0;
+	while (data->map[i])
+		i++;
+	if (!(tmp = malloc(sizeof(char *) * (i + 2))))
+		return (ERR_MAL);
+	i = -1;
+	while (data->map[++i])
+		tmp[i] = data->map[i];
+	if (!(tmp[i] = ft_strdup(line)))
+		return (ERR_MAL);
+	tmp[i + 1] = NULL;
+	free(data->map);
+	data->map = tmp;
+	return (OK);
 }
 
 int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actual func
@@ -277,29 +329,31 @@ int		parsing(t_ok_map *map, char *line, t_data *data) //change ret vals to actua
 	int ret_code; // this func will get the ret of the other func and handle if error
 
 	ret_code = 0;
-	if (!ft_strncmp(line, "R ", 2) && map->r == 0)
+	if (!ft_strncmp(line, "R ", 2) && map->r == 0 && map->map_sta == 0)
 		ret_code = get_reso(&map->r, line, data);
-	else if (!ft_strncmp(line, "NO ", 3) && map->no == 0)
+	else if (!ft_strncmp(line, "NO ", 3) && map->no == 0 && map->map_sta == 0)
 		ret_code = get_text(&map->no, line, &data->no_text);
-	else if (!ft_strncmp(line, "SO ", 3) && map->so == 0)
+	else if (!ft_strncmp(line, "SO ", 3) && map->so == 0 && map->map_sta == 0)
 		ret_code = get_text(&map->so, line, &data->so_text);
-	else if (!ft_strncmp(line, "WE ", 3) && map->we == 0)
+	else if (!ft_strncmp(line, "WE ", 3) && map->we == 0 && map->map_sta == 0)
 		ret_code = get_text(&map->we, line, &data->we_text);
-	else if (!ft_strncmp(line, "EA ", 3) && map->ea == 0)
+	else if (!ft_strncmp(line, "EA ", 3) && map->ea == 0 && map->map_sta == 0)
 		ret_code = get_text(&map->ea, line, &data->ea_text);
-	else if (!ft_strncmp(line, "S ", 2) && map->s == 0)
+	else if (!ft_strncmp(line, "S ", 2) && map->s == 0 && map->map_sta == 0)
 		ret_code = get_text(&map->s, line, &data->s_text);
-	else if (!ft_strncmp(line, "F ", 2) && map->f == 0)
+	else if (!ft_strncmp(line, "F ", 2) && map->f == 0 && map->map_sta == 0)
 		ret_code = get_color(&map->f, line, &data->f_color);
-	else if (!ft_strncmp(line, "C ", 2) && map->c == 0)
+	else if (!ft_strncmp(line, "C ", 2) && map->c == 0 && map->map_sta == 0)
 		ret_code = get_color(&map->c, line, &data->c_color);
-	else if(map_start(line) == OK && map_last(map)) //in case of map add if only at the end of file!!!!!
-		ret_code = get_map(&map->map, line, data->map); // call map func here
-	else if(line[0] == '\0') // in case of empty line in the file
+	else if (map_start(line) == OK) //in case of map add if only at the end of file!!!!!
+		ret_code = get_map(map, line, data); // call map func here
+	else if (map->map_sta == 1 && line[0] != '\0')
+		ret_code = 11;
+	else if (line[0] == '\0') // in case of empty line in the file
 		ret_code = OK;
 	else
 		ret_code = ERR_INV_KEY;
-	//ft_printf("ret of line: %d\n", ret_code);
+	ft_printf("ret of line: %d\n", ret_code);
 	return (ret_code);
 }
 
@@ -313,6 +367,7 @@ int		read_file(int fd, t_ok_map *map, t_data *data) // uncomment to use ft_split
 
 	line = NULL;
 	gnl = 1;
+	//while ((gnl = get_next_line(fd, &line)) > 0)
 	while (gnl == 1)
 	{
 		gnl = get_next_line(fd, &line);
@@ -369,6 +424,7 @@ int		open_fd(char *filename)
 
 int		handle_args(int argc, char **argv)
 //TODO keep argv[1] (filename) in memory in struct
+// handle that the argv[2] must be "--save" with strcmp.
 {
 	if (argc < 2)
 	{
@@ -380,6 +436,11 @@ int		handle_args(int argc, char **argv)
 		ft_printf("too many args\n"); // change TOO MANY ARGS
 		return (ERR_MANY_ARG);
 	}
+	if (argc == 3 && ft_strcmp("--save", argv[2]) != 0)
+	{
+		ft_printf("wrong 2second arg not --save\n");
+		return (ERR_INV_ARG);
+	}
 	return (OK);
 }
 
@@ -388,17 +449,18 @@ int		main(int argc, char **argv)
 	t_ok_map	*map;
 	t_data		*data;
 	int			fd;
+	int			ret_code;
 
 
-	if (handle_args(argc, argv) != OK)
-		return (handle_args(argc, argv));
-	if (check_file_typ(argv[1]) == ERR_INV_FILE_NAME)
-		return (ERR_INV_FILE_NAME);
+	if ((ret_code = handle_args(argc, argv)) != OK)
+		return (ret_code);
+	if ((ret_code = check_file_typ(argv[1])) == ERR_INV_FILE_NAME)
+		return (ret_code);
 	fd = open_fd(argv[1]);
-	if (fd == ERR_NO_FILE)
+	if ((ret_code = fd) == ERR_NO_FILE)
 	{
 		ft_printf("no file\n");
-		return (ERR_NO_FILE); // return ERR_NO_FILE
+		return (ret_code); // return ERR_NO_FILE
 	}
 
 	if (!(map = malloc(sizeof(t_ok_map))))
@@ -419,7 +481,7 @@ int		main(int argc, char **argv)
 	free(data->s_text);
 	free(data->f_color);
 	free(data->c_color);
-	free(data->map);
+	free_tab(data->map, 0);
 	free(data);
 	return (0);
 }

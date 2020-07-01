@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/23 19:00:59 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/01 01:52:35 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,14 @@
 # define ERR_COLOR 4
 # define ERR_INV_COLOR 5 // use this if > 255
 # define ERR_MAP_NOT_LAST 6
+# define ERR_INV_MAP 7
+# define ERR_MANY_PLAYER 11
 //# define ERR_MISSING_ELEM
 # define ERR_INV_KEY 14
 # define ERR_MAL 21
 # define ERR_FEW_ARG 30
 # define ERR_MANY_ARG 31
+# define ERR_INV_ARG 32
 # define ERR_NO_FILE 34 // case file doenst exist 
 # define ERR_INV_FILE_NAME 35 // case file no .cub
 
@@ -41,6 +44,8 @@ typedef struct		s_ok_map
 	int				f;
 	int				c;
 	int				map;
+	int				map_sta;
+	int				player;
 }					t_ok_map;
 
 typedef struct		s_data // add map data
