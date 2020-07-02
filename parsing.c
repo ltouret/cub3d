@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/01 20:52:01 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/03 01:43:37 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -348,6 +348,8 @@ int		check_dup(t_ok_map *map, char *line)
 		ret_code = ERR_DUP_KEY;
 	else if (!ft_strncmp(line, "C ", 2) && map->c == 1)
 		ret_code = ERR_DUP_KEY;
+	if (ret_code != OK)
+		free(line);
 	return (ret_code);
 }
 
@@ -360,14 +362,12 @@ int		parsing2(t_ok_map *map, char *line, t_data *data)
 		ret_code = get_color(&map->c, line, &data->c_color);
 	else if (map_start(line) == OK && map->map_end != 1)
 		ret_code = get_map(map, line, data);
+	else if (map->map_end == 1 && map_start(line))
+		ret_code = ERR_DUP_MAP; 
 	else if (map->map_end == 1 && line[0] != '\0')
 		ret_code = ERR_MAP_NOT_LAST;
 	else if (line[0] == '\0')
-	{
 		ret_code = OK;
-		if (map->map_sta == 1)
-			map->map_end = 1;
-	}
 	else
 		ret_code = ERR_INV_KEY;
 	return (ret_code);
@@ -379,11 +379,8 @@ int		parsing(t_ok_map *map, char *line, t_data *data)
 	int		ret_code;
 
 	ret_code = 0;
-	if (check_dup(map, line) == ERR_DUP_KEY)
-	{
-		ft_printf("ret of line: %d\n", ERR_DUP_KEY);
-		return (ERR_DUP_KEY);
-	}
+	if (map->map_sta == 1 && map_start(line) != OK)
+		map->map_end = 1;
 	if (!ft_strncmp(line, "R ", 2) && map->r == 0 && map->map_sta == 0)
 		ret_code = get_reso(&map->r, line, data);
 	else if (!ft_strncmp(line, "NO ", 3) && map->no == 0 && map->map_sta == 0)
@@ -403,6 +400,58 @@ int		parsing(t_ok_map *map, char *line, t_data *data)
 	return (ret_code);
 }
 
+int		max_len_map(char **map)
+{
+	int		i;
+	int		len;
+	int		tmp_len;
+
+	i = 0;
+	len = 0;
+	while (map[i])
+	{
+		if ((tmp_len = ft_strlen(map[i])) > len)
+			len = tmp_len;
+		i++;
+	}
+	return (len);
+}
+
+int		add_space_map(char ***map)
+{
+	int		i;
+	int		len;
+	char	*tmp;
+
+	i = 0;
+	len = max_len_map(*map);
+	while ((*map)[i])
+	{
+		if (ft_strlen((*map)[i]) < len)
+		{
+			if (!(tmp = malloc(sizeof(char) * (len + 1))))
+				return (ERR_MAL);
+			ft_strlcpy(tmp, (*map)[i], len);
+			ft_memset(tmp + ft_strlen(tmp), ' ', len - ft_strlen(tmp));
+			tmp[len] = '\0';
+			free((*map)[i]);
+			(*map)[i] = tmp;
+		}
+		i++;
+	}
+	return (OK);
+}
+
+void	print_map(char **map)
+{
+	int		i;
+
+	i = 0;
+	ft_printf("Parsed map is:\n");
+	while (map[i])
+		ft_printf("%s\n", map[i++]);
+}
+
 int		read_file(int fd, t_ok_map *map, t_data *data)
 {
 	int		gnl;
@@ -413,13 +462,19 @@ int		read_file(int fd, t_ok_map *map, t_data *data)
 	while (gnl == 1)
 	{
 		gnl = get_next_line(fd, &line);
-		ft_printf("%s\n", line);
+		//ft_printf("%s\n", line);
+		if (check_dup(map, line) == ERR_DUP_KEY)
+		{
+			ft_printf("ret of line: %d\n", ERR_DUP_KEY);
+			return (ERR_DUP_KEY);
+		}
 		if ((ret_code = parsing(map, line, data)) != OK)
 		{
 			free(line);
 			ft_printf("%d\n", ret_code);
 			return (ret_code);
 		}
+		//ft_printf("ret: %d\n", ret_code);
 		free(line);
 	}
 	if ((ret_code = missing_data(map)) != OK)
@@ -427,13 +482,10 @@ int		read_file(int fd, t_ok_map *map, t_data *data)
 		ft_printf("%d\n", ret_code);
 		return (ret_code);
 	}
-	/*
-	ft_printf("Parsed map is:\n");
-	while (data->map[gnl])
-	{
-		ft_printf("%s\n", data->map[gnl++]);
-	}
-	*/
+	print_map(data->map);
+	add_space_map(&data->map);
+	ft_printf("\n");
+	print_map(data->map);
 }
 
 int		check_file_typ(char *filename)

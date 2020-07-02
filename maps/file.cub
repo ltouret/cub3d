@@ -1,8 +1,8 @@
 R 520 400
 WE ./textures/GrayWalls.xpm
+EA ./textures/GrayWalls.xpm
 NO ./textures/GrayWalls.xpm
 SO ./textures/GrayWalls.xpm
-EA ./textures/GrayWalls.xpm
 S ./textures/GrayWalls.xpm
 
 F 255,10,0
