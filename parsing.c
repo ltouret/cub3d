@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 22:30:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/03 01:43:37 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/06 00:54:39 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -482,10 +482,10 @@ int		read_file(int fd, t_ok_map *map, t_data *data)
 		ft_printf("%d\n", ret_code);
 		return (ret_code);
 	}
-	print_map(data->map);
+	//print_map(data->map);
 	add_space_map(&data->map);
-	ft_printf("\n");
-	print_map(data->map);
+	//ft_printf("\n");
+	//print_map(data->map);
 }
 
 int		check_file_typ(char *filename)
@@ -543,6 +543,50 @@ int		handle_args(int argc, char **argv)
 	return (OK);
 }
 
+int		check_cloture(char **map, int x, int y)
+{
+	if (!(x - 1 >= 0 && y - 1 >= 0 && map[y - 1][x - 1] != ' '))
+		return (ERR_INV_MAP);
+	if (!(x >= 0 && y - 1 >= 0 && map[y - 1][x] != ' '))
+		return (ERR_INV_MAP);
+	if (!(x + 1 >= 0 && y - 1 >= 0 && map[y - 1][x + 1] != ' '))
+		return (ERR_INV_MAP);
+	if (!(x - 1 >= 0 && y >= 0 && map[y][x - 1] != ' '))
+		return (ERR_INV_MAP);
+	if (!(x + 1 >= 0 && y >= 0 && map[y][x + 1] != ' '))
+		return (ERR_INV_MAP);
+	if (!(x - 1 >= 0 && y + 1 >= 0 && map[y + 1][x - 1] != ' '))
+		return (ERR_INV_MAP);
+	if (!(x >= 0 && y + 1 >= 0 && map[y + 1][x] != ' '))
+		return (ERR_INV_MAP);
+	if (!(x + 1 >= 0 && y + 1 >= 0 && map[y + 1][x + 1] != ' '))
+		return (ERR_INV_MAP);
+	return (OK);
+}
+
+int		validate_map(char **map)
+{
+	int		x;
+	int		y;
+
+	y = 0;
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (ft_strchr("02NSWE", map[y][x]))
+			{
+				if (check_cloture(map, x, y) == ERR_INV_MAP)
+					return (ERR_INV_MAP);
+			}
+			x++;
+		}
+		y++;
+	}
+	return (OK);
+}
+
 //TODO remove printfs, and create func that prints error msgs!
 int		main(int argc, char **argv)
 {
@@ -570,6 +614,9 @@ int		main(int argc, char **argv)
 	init_data(data);
 	read_file(fd, map, data);
 	ft_printf("file closed %d\n", close(fd));
+
+	ft_printf("checkin map\n");
+	validate_map(data->map);
 
 	// create free func later
 	free(map);
