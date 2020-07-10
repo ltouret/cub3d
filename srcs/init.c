@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/10 23:05:01 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/11 01:02:28 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,46 +87,27 @@ int		handle_args(int argc, char **argv)
 }
 
 //TODO remove printfs, and create func that prints error msgs!
-int		init(int argc, char **argv)
+int		init(int argc, char **argv, t_data **data)
 {
-	t_ok_map	*map;
-	t_data		*data;
+	t_ok_map	map;
 	int			fd;
 	int			ret_code;
 
 	if ((ret_code = handle_args(argc, argv)) != OK)
 		return (ret_code);
-	if ((ret_code = check_file_typ(argv[1])) == ERR_INV_FILE_NAME)
+	if ((ret_code = check_file_typ(argv[1])) != OK)
 		return (ret_code);
 	fd = open_fd(argv[1]);
 	if ((ret_code = fd) == ERR_NO_FILE)
-	{
-		ft_printf("no file\n");
 		return (ret_code);
-	}
-
-	if (!(map = malloc(sizeof(t_ok_map))))
-		return (0);
-	if (!(data = malloc(sizeof(t_data))))
-		return (0);
-	init_t_map(map);
-	init_data(data);
-	read_file(fd, map, data);
-	ft_printf("file closed %d\n", close(fd));
-
-	ft_printf("checkin map\n");
-	validate_map(data->map);
-
-	// create free func later
-	free(map);
-	free(data->no_text);
-	free(data->we_text);
-	free(data->ea_text);
-	free(data->so_text);
-	free(data->s_text);
-	free(data->f_color);
-	free(data->c_color);
-	free_tab(data->map, 0);
-	free(data);
-	return (0);
+	if (!(*data = malloc(sizeof(t_data))))
+		return (ERR_MAL);
+	init_t_map(&map);
+	init_data(*data);
+	if ((ret_code = read_file(fd, &map, *data)) != OK)
+		return (ret_code);
+	close(fd);
+	if ((ret_code = validate_map((*data)->map)) != OK)
+		return (ret_code);
+	return (OK);
 }

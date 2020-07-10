@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/10 23:14:34 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/11 01:22:52 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # define ERR_DUP_MAP 7
 # define ERR_INV_MAP 8 
 # define ERR_MANY_PLAYER 11
-//# define ERR_MISSING_ELEM
 # define ERR_DUP_KEY 13
 # define ERR_INV_KEY 14
 # define ERR_MAL 21
@@ -75,6 +74,7 @@ typedef struct		s_data // add map data
 	char			*c_color;
 	char			**map;
 }					t_data;
+
 void	init_t_map(t_ok_map *map);
 void	init_data(t_data *data);
 int		missing_data(t_ok_map *map);
@@ -95,7 +95,7 @@ int		check_dup(t_ok_map *map, char *line);
 int		parsing2(t_ok_map *map, char *line, t_data *data);
 int		parsing(t_ok_map *map, char *line, t_data *data);
 int		max_len_map(char **map);
-int		add_space_map(char ***map);
+int		add_space_map(char **map);
 void	print_map(char **map); // erase dis shit
 int		read_file(int fd, t_ok_map *map, t_data *data);
 int		check_file_typ(char *filename);
@@ -103,5 +103,5 @@ int		open_fd(char *filename);
 int		handle_args(int argc, char **argv);
 int		check_cloture(char **map, int x, int y);
 int		validate_map(char **map);
-int		init(int argc, char **argv);
+int		init(int argc, char **argv, t_data **data);
 #endif

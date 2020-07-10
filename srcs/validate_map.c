@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 15:24:57 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/10 23:26:29 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/11 00:24:31 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,25 @@ int		max_len_map(char **map)
 	return (len);
 }
 
-int		add_space_map(char ***map)
+int		add_space_map(char **map)
 {
 	int		i;
 	int		len;
 	char	*tmp;
 
 	i = 0;
-	len = max_len_map(*map);
-	while ((*map)[i])
+	len = max_len_map(map);
+	while (map[i])
 	{
-		if (ft_strlen((*map)[i]) < len)
+		if (ft_strlen(map[i]) < len)
 		{
 			if (!(tmp = malloc(sizeof(char) * (len + 1))))
 				return (ERR_MAL);
-			ft_strlcpy(tmp, (*map)[i], len);
+			ft_strlcpy(tmp, map[i], len);
 			ft_memset(tmp + ft_strlen(tmp), ' ', len - ft_strlen(tmp));
 			tmp[len] = '\0';
-			free((*map)[i]);
-			(*map)[i] = tmp;
+			free(map[i]);
+			map[i] = tmp;
 		}
 		i++;
 	}
@@ -92,6 +92,8 @@ int		validate_map(char **map)
 	int		x;
 	int		y;
 
+	if (add_space_map(map) == ERR_MAL)
+		return (ERR_MAL);
 	y = 0;
 	while (map[y])
 	{

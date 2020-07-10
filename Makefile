@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2020/07/10 23:28:56 by ltouret          ###   ########.fr        #
+#    Updated: 2020/07/11 00:04:22 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ INCLUDES	= -I libft
 
 $(NAME): ${OBJS}
 		make -C libft/ 
-		${CC} ${OBJS} ${LIBFT_FLAGS} -o ${NAME} 
+		${CC} -fsanitize=address ${OBJS} ${LIBFT_FLAGS} -o ${NAME} 
 
 all:	${NAME}
 
