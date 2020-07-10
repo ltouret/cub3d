@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/03 00:37:27 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/10 23:14:34 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CUB3D_H
 
 # include <fcntl.h> // include only in file that needs this shit -- open 
+# include "libft.h"
 
 # define ERR 0
 # define OK 1
@@ -74,4 +75,33 @@ typedef struct		s_data // add map data
 	char			*c_color;
 	char			**map;
 }					t_data;
+void	init_t_map(t_ok_map *map);
+void	init_data(t_data *data);
+int		missing_data(t_ok_map *map);
+int		check_res(char *line);
+int		get_reso(int *map_res, char *line, t_data *data);
+int		check_text(char *path);
+int		get_text(int *map_text, char *line, char **data_text);
+int		free_tab(char **tab, int index);
+int		check_color(char *tmp);
+int		write_color(char **str, int num);
+int		cast_color(char **tab, char **data_color, int *map_bool);
+int		count_tab(char **tab);
+int		get_color(int *map_bool, char *line, char **data_color);
+int		check_map(char *line, t_ok_map *map);
+int		map_start(char *line);
+int		get_map(t_ok_map *map, char *line, t_data *data);
+int		check_dup(t_ok_map *map, char *line);
+int		parsing2(t_ok_map *map, char *line, t_data *data);
+int		parsing(t_ok_map *map, char *line, t_data *data);
+int		max_len_map(char **map);
+int		add_space_map(char ***map);
+void	print_map(char **map); // erase dis shit
+int		read_file(int fd, t_ok_map *map, t_data *data);
+int		check_file_typ(char *filename);
+int		open_fd(char *filename);
+int		handle_args(int argc, char **argv);
+int		check_cloture(char **map, int x, int y);
+int		validate_map(char **map);
+int		init(int argc, char **argv);
 #endif
