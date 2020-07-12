@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/11 01:22:52 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/12 10:53:34 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define ERR_DUP_KEY 13
 # define ERR_INV_KEY 14
 # define ERR_MAL 21
+# define ERR_UK 28 
 # define ERR_FEW_ARG 30
 # define ERR_MANY_ARG 31
 # define ERR_INV_ARG 32
@@ -45,6 +46,7 @@
 # define ERR_MISS_S 47
 # define ERR_MISS_R 48
 # define ERR_MISS_PLA 49
+
 
 typedef struct		s_ok_map
 {

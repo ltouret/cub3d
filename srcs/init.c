@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/11 01:02:28 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/12 10:44:38 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int		init(int argc, char **argv, t_data **data)
 	int			fd;
 	int			ret_code;
 
+	*data = NULL;
 	if ((ret_code = handle_args(argc, argv)) != OK)
 		return (ret_code);
 	if ((ret_code = check_file_typ(argv[1])) != OK)
