@@ -1,4 +1,5 @@
 #include "srcs/cub3d.h"
+#include "mlx.h"
 
 void	free_data(t_data **data)
 {
@@ -79,6 +80,7 @@ void	print_errors(int err_code, t_data **data)
 
 int		main(int argc, char **argv)
 {
+
 	int		ret_code;
 	t_data	*data;
 
@@ -86,4 +88,20 @@ int		main(int argc, char **argv)
 		print_errors(ret_code, &data);
 	free_data(&data);
 	ft_printf("DONE\n");
+
+	/*void    *mlx;
+	void	*mlx_win;
+	void	*img;
+
+	mlx = mlx_init();
+	img = mlx_new_image(mlx, 640, 480);
+	mlx_win = mlx_new_window(mlx, 640, 480, "Hello world!");
+	(void) img;
+	(void) mlx_win;
+	mlx_loop(mlx);
+	if ((data_mlx.mlx_ptr = mlx_init()) == NULL)
+		return (EXIT_FAILURE);
+	if ((data_mlx.mlx_win = mlx_new_window(data_mlx.mlx_ptr, 640, 480, "Hello world")) == NULL)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);*/
 }

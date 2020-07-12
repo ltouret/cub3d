@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2020/07/11 00:04:22 by ltouret          ###   ########.fr        #
+#    Updated: 2020/07/12 21:16:16 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,26 +23,32 @@ RM		= rm -f
 
 CFLAGS = -Wall -Wextra -Werror
 
+FSAN = -fsanitize=address
+
+MLX_FLAGS	= -Lmlx/ -lmlx -lXext -lX11 -lbsd
+
 LIBFT_FLAGS	= -Llibft -lft
 
-INCLUDES	= -I libft
+INCLUDES	= -I libft -I mlx 
 
 .c.o:
 		${CC} ${INCLUDES} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 $(NAME): ${OBJS}
 		make -C libft/ 
-		${CC} -fsanitize=address ${OBJS} ${LIBFT_FLAGS} -o ${NAME} 
+		make -C mlx/
+		${CC} ${FSAN} ${OBJS} ${LIBFT_FLAGS} ${MLX_FLAGS} -o ${NAME} 
 
 all:	${NAME}
 
 clean:
+		make -C libft clean
+		make -C mlx clean                                                       
 		${RM} ${OBJS}
-		make -C libft/ clean
 
 fclean:	clean
-		${RM} ${NAME}
 		make -C libft/ fclean
+		${RM} ${NAME}
 
 re:		fclean all
 

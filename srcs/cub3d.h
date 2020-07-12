@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/12 10:53:34 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/12 18:55:20 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <fcntl.h> // include only in file that needs this shit -- open 
 # include "libft.h"
+# include "mlx.h"
 
 # define ERR 0
 # define OK 1
