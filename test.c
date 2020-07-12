@@ -42,7 +42,7 @@ void	error_msgs(int err_code, char *err[100])
 
 	i = 0;
 	while (i < 100)
-		err[i++] = NULL;
+		err[i++] = "Unknown error";
 	if (err_code < 30)
 	{
 		err[2] = "Invalid resolution";
@@ -70,10 +70,9 @@ void	print_errors(int err_code, t_data **data)
 	if (err_code < 0 || err_code > 100)
 		err_code = ERR_UK;
 	error_msgs(err_code, err);
-	if (err[err_code] == NULL)
-		err_code = ERR_UK;
-	ft_printf("Error\n");
-	ft_printf("%s\n", err[err_code]);
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(err[err_code], 2);
+	ft_putstr_fd("\n", 2);
 	free_data(data);
 	exit (-1);
 }
@@ -85,8 +84,6 @@ int		main(int argc, char **argv)
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
 		print_errors(ret_code, &data);
-	print_errors(0, &data);
-	free_data(&data);
 	free_data(&data);
 	ft_printf("DONE\n");
 }
