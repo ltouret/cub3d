@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/12 18:55:20 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/29 20:34:05 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,36 @@ typedef struct		s_ok_map
 	int				player;
 }					t_ok_map;
 
-typedef struct		s_data // add map data
+typedef struct		s_mlx //add text struc here
 {
-	int				width;
-	int				height;
+	void			*mlx;
+	void			*mlx_win;
+	int				mlx_wid;
+	int				mlx_hei;
+}					t_mlx;
+
+typedef struct		s_text_path
+{
 	char			*no_text;
 	char			*so_text;
 	char			*we_text;
 	char			*ea_text;
 	char			*s_text;
-	char			*f_color;
-	char			*c_color;
+}					t_text_path;
+
+typedef struct		s_color
+{
+	int				f_color;
+	int				c_color;
+}					t_color;
+
+typedef struct		s_data //check for missing data
+{
+	t_mlx			mlx;
+	t_text_path		text_path;
+	t_color			color;
+	int				map_width;
+	int				map_height;
 	char			**map;
 }					t_data;
 
@@ -87,10 +106,7 @@ int		check_text(char *path);
 int		get_text(int *map_text, char *line, char **data_text);
 int		free_tab(char **tab, int index);
 int		check_color(char *tmp);
-int		write_color(char **str, int num);
-int		cast_color(char **tab, char **data_color, int *map_bool);
-int		count_tab(char **tab);
-int		get_color(int *map_bool, char *line, char **data_color);
+int		get_color(int *map_bool, char *line, int *data_color);
 int		check_map(char *line, t_ok_map *map);
 int		map_start(char *line);
 int		get_map(t_ok_map *map, char *line, t_data *data);
@@ -107,4 +123,6 @@ int		handle_args(int argc, char **argv);
 int		check_cloture(char **map, int x, int y);
 int		validate_map(char **map);
 int		init(int argc, char **argv, t_data **data);
+void	free_data(t_data **data);
+void	print_errors(int err_code, t_data **data);
 #endif

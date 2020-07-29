@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/12 10:44:38 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/29 20:22:15 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ void	init_t_map(t_ok_map *map)
 
 void	init_data(t_data *data)
 {
-	data->width = 0;
-	data->height = 0;
-	data->no_text = NULL;
-	data->so_text = NULL;
-	data->ea_text = NULL;
-	data->we_text = NULL;
-	data->s_text = NULL;
-	data->f_color = NULL;
-	data->c_color = NULL;
+	data->map_width = 0;
+	data->map_height = 0;
+	data->text_path.no_text = NULL;
+	data->text_path.so_text = NULL;
+	data->text_path.ea_text = NULL;
+	data->text_path.we_text = NULL;
+	data->text_path.s_text = NULL;
+	data->color.f_color = 0;
+	data->color.c_color= 0;
 	data->map = NULL;
 }
 
@@ -69,20 +69,11 @@ int		missing_data(t_ok_map *map)
 int		handle_args(int argc, char **argv)
 {
 	if (argc < 2)
-	{
-		ft_printf("not enough args\n");
 		return (ERR_FEW_ARG);
-	}
 	else if (argc > 3)
-	{
-		ft_printf("too many args\n");
 		return (ERR_MANY_ARG);
-	}
 	if (argc == 3 && ft_strcmp("--save", argv[2]) != 0)
-	{
-		ft_printf("wrong second arg not --save\n");
 		return (ERR_INV_ARG);
-	}
 	return (OK);
 }
 
