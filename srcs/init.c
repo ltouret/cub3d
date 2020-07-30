@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/29 20:22:15 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/30 01:24:30 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ void	init_data(t_data *data)
 {
 	data->map_width = 0;
 	data->map_height = 0;
+	data->map = NULL;
+	data->mlx.mlx = NULL;
+	data->mlx.mlx_win = NULL;
 	data->text_path.no_text = NULL;
 	data->text_path.so_text = NULL;
 	data->text_path.ea_text = NULL;
@@ -38,7 +41,6 @@ void	init_data(t_data *data)
 	data->text_path.s_text = NULL;
 	data->color.f_color = 0;
 	data->color.c_color= 0;
-	data->map = NULL;
 }
 
 int		missing_data(t_ok_map *map)
@@ -89,13 +91,15 @@ int		init(int argc, char **argv, t_data **data)
 		return (ret_code);
 	if ((ret_code = check_file_typ(argv[1])) != OK)
 		return (ret_code);
-	fd = open_fd(argv[1]);
-	if ((ret_code = fd) == ERR_NO_FILE)
-		return (ret_code);
 	if (!(*data = malloc(sizeof(t_data))))
 		return (ERR_MAL);
 	init_t_map(&map);
 	init_data(*data);
+	if (!((*data)->mlx.mlx = mlx_init()))
+		return (ERR_MLX_INIT);
+	fd = open_fd(argv[1]);
+	if ((ret_code = fd) == ERR_NO_FILE)
+		return (ret_code);
 	if ((ret_code = read_file(fd, &map, *data)) != OK)
 		return (ret_code);
 	close(fd);

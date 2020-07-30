@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/23 23:31:52 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/29 20:25:37 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/30 01:57:59 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	free_data(t_data **data)
 	free((*data)->text_path.ea_text);
 	free((*data)->text_path.so_text);
 	free((*data)->text_path.s_text);
+	//mlx_destroy_window((*data)->mlx.mlx, (*data)->mlx.mlx_win); // check if this is needed
 	free_tab((*data)->map, 0);
 	free(*data);
 	*data = NULL;
@@ -43,6 +44,7 @@ static void	error_msgs2(char *err[100])
 	err[47] = "Missing sprite texture";
 	err[48] = "Missing resolution";
 	err[49] = "Missing player in map";
+	err[51] = "Error initializing mlx";
 }
 
 // TODO change err tab to real number cuz i created with one 100 error msgs

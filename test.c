@@ -9,25 +9,17 @@ int		main(int argc, char **argv)
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
 		print_errors(ret_code, &data);
-	free_data(&data);
-	ft_printf("DONE\n");
 
-	void	*mlx;
-	void	*mlx_win;
-	int		x;
-	int		y;
-
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 640, 480, "Hello world!");
-	mlx_get_screen_size(mlx, &x, &y);
-	ft_printf("%d %d\n", x, y);
-	mlx_mouse_hide(mlx, mlx_win);
-	mlx_loop(mlx);
-	//(void) img;
+	data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid, data->mlx.mlx_hei,
+		"Cub3d");
+	mlx_mouse_hide(data->mlx.mlx, data->mlx.mlx_win);
+	mlx_loop(data->mlx.mlx);
 	/*(void) mlx_win;
 	if ((data_mlx.mlx_ptr = mlx_init()) == NULL)
 		return (EXIT_FAILURE);
 	if ((data_mlx.mlx_win = mlx_new_window(data_mlx.mlx_ptr, 640, 480, "Hello world")) == NULL)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);*/
+	free_data(&data);
+	ft_printf("DONE\n");
 }

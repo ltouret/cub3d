@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/29 20:34:05 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/30 01:13:36 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 # define ERR_MISS_R 48
 # define ERR_MISS_PLA 49
 
+# define ERR_MLX_INIT 51
 
 typedef struct		s_ok_map
 {
