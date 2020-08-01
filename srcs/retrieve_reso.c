@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 18:09:33 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/30 02:04:27 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/07/30 22:40:56 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static int		max_reso(t_data *data)
 	int		screen_y;
 
 	mlx_get_screen_size(data->mlx.mlx, &screen_x, &screen_y);
-	ft_printf("%d %d\n", screen_x, screen_y);
 	if (data->mlx.mlx_wid > screen_x || data->mlx.mlx_hei > screen_y)
 		return (ERR_RES);
 	return (OK);

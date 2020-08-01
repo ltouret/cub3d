@@ -6,25 +6,13 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 15:24:57 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/11 00:24:31 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/08/01 03:31:12 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-//TODO ERASE print_map
-
-void	print_map(char **map)
-{
-	int		i;
-
-	i = 0;
-	ft_printf("Parsed map is:\n");
-	while (map[i])
-		ft_printf("%s\n", map[i++]);
-}
-
-int		max_len_map(char **map)
+static int	max_len_map(char **map)
 {
 	int		i;
 	int		len;
@@ -41,7 +29,7 @@ int		max_len_map(char **map)
 	return (len);
 }
 
-int		add_space_map(char **map)
+static int	add_space_map(char **map)
 {
 	int		i;
 	int		len;
@@ -66,7 +54,7 @@ int		add_space_map(char **map)
 	return (OK);
 }
 
-int		check_cloture(char **map, int x, int y)
+static int	check_cloture(char **map, int x, int y)
 {
 	if (!(x - 1 >= 0 && y - 1 >= 0 && map[y - 1][x - 1] != ' '))
 		return (ERR_INV_MAP);
@@ -87,27 +75,38 @@ int		check_cloture(char **map, int x, int y)
 	return (OK);
 }
 
-int		validate_map(char **map)
+static void	map_len(t_data *data)
+{
+	data->map_width = ft_strlen(data->map[0]);
+	while (data->map[data->map_height])
+	{
+		handle_player(data, data->map[data->map_height]);
+		data->map_height++;
+	}
+}
+
+int		validate_map(t_data *data)
 {
 	int		x;
 	int		y;
 
-	if (add_space_map(map) == ERR_MAL)
+	if (add_space_map(data->map) == ERR_MAL)
 		return (ERR_MAL);
 	y = 0;
-	while (map[y])
+	while (data->map[y])
 	{
 		x = 0;
-		while (map[y][x])
+		while (data->map[y][x])
 		{
-			if (ft_strchr("02NSWE", map[y][x]))
+			if (ft_strchr("02NSWE", data->map[y][x]))
 			{
-				if (check_cloture(map, x, y) == ERR_INV_MAP)
+				if (check_cloture(data->map, x, y) == ERR_INV_MAP)
 					return (ERR_INV_MAP);
 			}
 			x++;
 		}
 		y++;
 	}
+	map_len(data);
 	return (OK);
 }

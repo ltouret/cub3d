@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/30 01:24:30 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/08/01 00:37:28 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ void	init_data(t_data *data)
 	data->text_path.s_text = NULL;
 	data->color.f_color = 0;
 	data->color.c_color= 0;
+	data->player.x = 0;
+	data->player.y = 0;
+	data->player.ori = 0;
 }
 
 int		missing_data(t_ok_map *map)
@@ -103,7 +106,7 @@ int		init(int argc, char **argv, t_data **data)
 	if ((ret_code = read_file(fd, &map, *data)) != OK)
 		return (ret_code);
 	close(fd);
-	if ((ret_code = validate_map((*data)->map)) != OK)
+	if ((ret_code = add_data(*data)) != OK)
 		return (ret_code);
 	return (OK);
 }

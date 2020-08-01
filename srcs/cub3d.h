@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/30 01:13:36 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/08/01 00:36:11 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,19 @@ typedef struct		s_color
 	int				c_color;
 }					t_color;
 
+typedef struct		s_player
+{
+	double			ori;
+	double			x;
+	double			y;
+}					t_player;
+
 typedef struct		s_data //check for missing data
 {
 	t_mlx			mlx;
 	t_text_path		text_path;
 	t_color			color;
+	t_player		player;
 	int				map_width;
 	int				map_height;
 	char			**map;
@@ -114,15 +122,13 @@ int		get_map(t_ok_map *map, char *line, t_data *data);
 int		check_dup(t_ok_map *map, char *line);
 int		parsing2(t_ok_map *map, char *line, t_data *data);
 int		parsing(t_ok_map *map, char *line, t_data *data);
-int		max_len_map(char **map);
-int		add_space_map(char **map);
-void	print_map(char **map); // erase dis shit
 int		read_file(int fd, t_ok_map *map, t_data *data);
 int		check_file_typ(char *filename);
 int		open_fd(char *filename);
 int		handle_args(int argc, char **argv);
-int		check_cloture(char **map, int x, int y);
-int		validate_map(char **map);
+int		validate_map(t_data *data);
+void	handle_player(t_data *data, char *map_line);
+int		add_data(t_data *data);
 int		init(int argc, char **argv, t_data **data);
 void	free_data(t_data **data);
 void	print_errors(int err_code, t_data **data);
