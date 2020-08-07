@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 00:34:19 by ltouret           #+#    #+#             */
-/*   Updated: 2020/08/01 03:30:52 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/08/07 15:54:40 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	handle_player(t_data *data, char *map_line)
 				data->player.ori = 90;
 			data->player.x = i;
 			data->player.y = data->map_height;
+			map_line[i] = '0';
 		}
 		i++;
 	}

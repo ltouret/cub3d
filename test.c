@@ -6,7 +6,7 @@
 #define mapWidth 24
 #define mapHeight 24
 
-int worldMap[mapWidth][mapHeight]=
+/*int worldMap[mapWidth][mapHeight]=
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -32,7 +32,7 @@ int worldMap[mapWidth][mapHeight]=
   {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
+};*/
 
 void	print_map(char **map)
 {
@@ -46,7 +46,10 @@ void	print_map(char **map)
 
 void	ray(t_data *data)
 {
+	char **worldMap = data->map;
 	double posX = data->player.x, posY = data->player.y;  //x and y start position
+	//ft_printf("%d %d",(int) posY, (int)posX);
+	//double posX = 22, posY = 12;  //x and y start position
 	double dirX = -1, dirY = 0; //initial direction vector
 	double planeX = 0, planeY = 0.66; //the 2d raycaster version of camera plane
 
@@ -105,7 +108,7 @@ void	ray(t_data *data)
 		  sideDistY = (mapY + 1.0 - posY) * deltaDistY;
 		}
 
-		      //perform DDA
+		//perform DDA
 		while (hit == 0)
 		{
 		  //jump to next map square, OR in x-direction, OR in y-direction
@@ -121,8 +124,9 @@ void	ray(t_data *data)
 		    mapY += stepY;
 		    side = 1;
 		  }
+		  ft_printf("this is x %d : %d %d and %d %d and %c\n", x,(int) sideDistY, (int) sideDistY, mapX, mapY, worldMap[mapY][mapX]);
 		  //Check if ray has hit a wall
-		   if (worldMap[mapX][mapY] > 0) hit = 1;
+		   if (worldMap[mapY][mapX] == '1') hit = 1;
 		} 
 		if (side == 0) perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
       else           perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
@@ -134,7 +138,6 @@ void	ray(t_data *data)
       if(drawStart < 0)drawStart = 0;
       int drawEnd = lineHeight / 2 + h / 2;
       if(drawEnd >= h)drawEnd = h - 1;
-		//(void) ;
 		// TODO add color stuff here!
 	/* color;
       switch(worldMap[mapX][mapY])
@@ -155,22 +158,69 @@ void	ray(t_data *data)
 	}
 }
 
+typedef struct  ss_data {
+    void        *img;
+    char        *addr;
+    int         bits_per_pixel;
+    int         line_length;
+    int         endian;
+}				ts_data;
+
+void            my_mlx_pixel_put(ts_data *ddata, int x, int y, int color)
+{
+    char    *dst;
+
+    dst = ddata->addr + (y * ddata->line_length + x * (ddata->bits_per_pixel / 8));
+    *(unsigned int*)dst = color;
+}
+
 int		main(int argc, char **argv)
 {
 
 	int		ret_code;
 	t_data	*data;
+	ts_data img;
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
 		print_errors(ret_code, &data);
 	//ft_printf("%d %d\n", (int)data->player.x, (int)data->player.y);
 	//ray(data);
 	//print_map(data->map);
-	/*if (!(data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid,
+	if (!(data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid,
 		data->mlx.mlx_hei, "Cub3d")))
 		print_errors(ERR_MLX_INIT, &data);
 	mlx_mouse_hide(data->mlx.mlx, data->mlx.mlx_win);
-	mlx_loop(data->mlx.mlx);*/
+	img.img = mlx_new_image(data->mlx.mlx, data->mlx.mlx_wid, data->mlx.mlx_hei);
+    img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
+                                 &img.endian);
+	int y;
+	int x;
+	img.addr[3] = 97;
+	char *dst;
+	dst = img.addr + 0 + 4 * 520 * 188;
+	*(unsigned int *)dst =  0x00FF0000;
+	dst = img.addr + 0 + 4 * 520 * 292;
+	*(unsigned int *)dst =  0x00FF0000;
+	img.addr[0 + 4 * 520 * 292 + 1] = 255;
+	x = 0;
+	while (x < 540)
+	{
+		y = 0;
+		while (y < 400)
+		{
+			//my_mlx_pixel_put(&img, 5, 50, 0x00FF0000);
+			//my_mlx_pixel_put(&img, 0, 0, 0x00FFFFFF);
+			y++;
+		}
+		x++;
+	}
+	int w = -1;
+	while (++w < 11)
+	{
+		printf("%d %d %s\n", img.addr[w], w, w % 3 != 0 ? "" : "alpha vla" );
+	}
+	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, img.img, 0, 0);
+	mlx_loop(data->mlx.mlx);
 	free_data(&data);
 	ft_printf("DONE\n");
 }
