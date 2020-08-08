@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/08/01 00:36:11 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/08/08 16:14:07 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,15 @@ typedef struct		s_player
 	double			x;
 	double			y;
 }					t_player;
+
+typedef struct		s_img
+{
+	void			*img;
+	char			*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+}					t_img;
 
 typedef struct		s_data //check for missing data
 {

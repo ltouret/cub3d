@@ -34,6 +34,27 @@
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };*/
 
+
+void			draw_pixel(t_img *img, int x, int y, t_data *data, int color)
+{
+	char *dst;
+
+    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+	*(unsigned int *)dst =  color;
+}
+
+void			draw_vert(t_img *img, int x, int y1, int y2, t_data *data, int color)
+{
+	int i;
+
+	i = y1 - 1;
+	while (++i <= y2)
+	{
+		//printf("im %d\n", i);
+		draw_pixel(img, x, i, data, color);
+	}
+}
+
 void	print_map(char **map)
 {
 	int		i;
@@ -44,7 +65,7 @@ void	print_map(char **map)
 		ft_printf("%s\n", map[i++]);
 }
 
-void	ray(t_data *data)
+/*void	ray(t_data *data, ts_data *img, int color)
 {
 	char **worldMap = data->map;
 	double posX = data->player.x, posY = data->player.y;  //x and y start position
@@ -78,6 +99,9 @@ void	ray(t_data *data)
 		 //length of ray from one x or y-side to next x or y-side
 		double deltaDistX = (rayDirY == 0) ? 0 : ((rayDirX == 0) ? 1 : fabs(1 / rayDirX));
 		double deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : fabs(1 / rayDirY));
+		//double deltaDistX = fabs(1 / rayDirX);
+		//double deltaDistY = fabs(1 / rayDirY); 
+		printf("x is : %d ray: %f %f, delta %f %f\n",x, rayDirX, rayDirY, deltaDistX, deltaDistY);
 		double perpWallDist;
 		
 		//what direction to step in x or y-direction (either +1 or -1)
@@ -124,7 +148,7 @@ void	ray(t_data *data)
 		    mapY += stepY;
 		    side = 1;
 		  }
-		  ft_printf("this is x %d : %d %d and %d %d and %c\n", x,(int) sideDistY, (int) sideDistY, mapX, mapY, worldMap[mapY][mapX]);
+		  printf("this is x %d dist: %f %f and %d %d and %c side : %d\n", x, sideDistY, sideDistX, mapX, mapY, worldMap[mapY][mapX], side);
 		  //Check if ray has hit a wall
 		   if (worldMap[mapY][mapX] == '1') hit = 1;
 		} 
@@ -137,9 +161,11 @@ void	ray(t_data *data)
       int drawStart = -lineHeight / 2 + h / 2;
       if(drawStart < 0)drawStart = 0;
       int drawEnd = lineHeight / 2 + h / 2;
-      if(drawEnd >= h)drawEnd = h - 1;
+      if (drawEnd >= h)drawEnd = h - 1;
+		printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
+		draw_vert(img, x, drawStart, drawEnd, data, 0x00FF0000);
 		// TODO add color stuff here!
-	/* color;
+	 color;
       switch(worldMap[mapX][mapY])
       {
         case 1:  color = RGB_Red;  break; //red
@@ -151,40 +177,23 @@ void	ray(t_data *data)
 
       //give x and y sides different brightness
       if (side == 1) {color = color / 2;}
-*/
+
       //draw the pixels of the stripe as a vertical line
      // verLine(x, drawStart, drawEnd, color);
 		x++;
 	}
-}
-
-typedef struct  ss_data {
-    void        *img;
-    char        *addr;
-    int         bits_per_pixel;
-    int         line_length;
-    int         endian;
-}				ts_data;
-
-void            my_mlx_pixel_put(ts_data *ddata, int x, int y, int color)
-{
-    char    *dst;
-
-    dst = ddata->addr + (y * ddata->line_length + x * (ddata->bits_per_pixel / 8));
-    *(unsigned int*)dst = color;
-}
+}*/
 
 int		main(int argc, char **argv)
 {
 
 	int		ret_code;
 	t_data	*data;
-	ts_data img;
+	t_img	img;
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
 		print_errors(ret_code, &data);
 	//ft_printf("%d %d\n", (int)data->player.x, (int)data->player.y);
-	//ray(data);
 	//print_map(data->map);
 	if (!(data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid,
 		data->mlx.mlx_hei, "Cub3d")))
@@ -193,34 +202,13 @@ int		main(int argc, char **argv)
 	img.img = mlx_new_image(data->mlx.mlx, data->mlx.mlx_wid, data->mlx.mlx_hei);
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
-	int y;
-	int x;
-	img.addr[3] = 97;
-	char *dst;
-	dst = img.addr + 0 + 4 * 520 * 188;
-	*(unsigned int *)dst =  0x00FF0000;
-	dst = img.addr + 0 + 4 * 520 * 292;
-	*(unsigned int *)dst =  0x00FF0000;
-	img.addr[0 + 4 * 520 * 292 + 1] = 255;
-	x = 0;
-	while (x < 540)
-	{
-		y = 0;
-		while (y < 400)
-		{
-			//my_mlx_pixel_put(&img, 5, 50, 0x00FF0000);
-			//my_mlx_pixel_put(&img, 0, 0, 0x00FFFFFF);
-			y++;
-		}
-		x++;
-	}
-	int w = -1;
-	while (++w < 11)
-	{
-		printf("%d %d %s\n", img.addr[w], w, w % 3 != 0 ? "" : "alpha vla" );
-	}
+	ray(data, img);
+	//ray(data, &img, 0x00FF0000);
+	//draw_vert(&img, 0, 100, 111, data, 0x00FF0000);
+	//draw_vert(&img, 2, 100, 111, data, 0x00FF0000);
+
 	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, img.img, 0, 0);
-	mlx_loop(data->mlx.mlx);
+	//mlx_loop(data->mlx.mlx);
 	free_data(&data);
 	ft_printf("DONE\n");
 }
