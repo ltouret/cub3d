@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 00:34:19 by ltouret           #+#    #+#             */
-/*   Updated: 2020/08/07 15:54:40 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/18 14:21:32 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ void	handle_player(t_data *data, char *map_line)
 		if (ft_find("NWSE", map_line[i]) != -1)
 		{
 			if (map_line[i] == 'N')
-				data->player.ori = 0;
-			else if (map_line[i] == 'W')
 				data->player.ori = 270;
-			else if (map_line[i] == 'S')
+			else if (map_line[i] == 'W')
 				data->player.ori = 180;
-			else if (map_line[i] == 'E')
+			else if (map_line[i] == 'S')
 				data->player.ori = 90;
-			data->player.x = i;
-			data->player.y = data->map_height;
+			else if (map_line[i] == 'E')
+				data->player.ori = 0;
+			data->player.x = i + 0.5;
+			data->player.y = data->map_height + 0.5;
 			map_line[i] = '0';
 		}
 		i++;

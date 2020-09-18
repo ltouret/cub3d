@@ -48,6 +48,15 @@ void			draw_vert(t_img *img, int x, int y1, int y2, t_data *data, int color)
 	int i;
 
 	i = y1 - 1;
+	if (i > data->mlx.mlx_hei)
+		i = data->mlx.mlx_hei;
+	if (y2 < 0)
+		y2 = 0;
+	if (i < 0)
+		i = 0; 
+	if (y2 > data->mlx.mlx_hei)
+		y2 = data->mlx.mlx_hei;
+	printf("x %d y1 %d y2 %d\n", x, i, y2);
 	while (++i <= y2)
 	{
 		//printf("im %d\n", i);
@@ -202,13 +211,13 @@ int		main(int argc, char **argv)
 	img.img = mlx_new_image(data->mlx.mlx, data->mlx.mlx_wid, data->mlx.mlx_hei);
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
-	ray(data, img);
+	ray(data, &img);
 	//ray(data, &img, 0x00FF0000);
 	//draw_vert(&img, 0, 100, 111, data, 0x00FF0000);
 	//draw_vert(&img, 2, 100, 111, data, 0x00FF0000);
 
 	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, img.img, 0, 0);
-	//mlx_loop(data->mlx.mlx);
+	mlx_loop(data->mlx.mlx);
 	free_data(&data);
 	ft_printf("DONE\n");
 }
