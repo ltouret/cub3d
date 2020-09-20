@@ -6,6 +6,30 @@
 #define mapWidth 24
 #define mapHeight 24
 
+//this has to be in the Makefile
+#define LINUX 1
+
+// keys.h
+#define LIN_KEY_W 119
+#define LIN_KEY_A 97
+#define LIN_KEY_S 115
+#define LIN_KEY_D 100
+#define LIN_KEY_UP 65362
+#define LIN_KEY_LEFT 65361
+#define LIN_KEY_DOWN 65364
+#define LIN_KEY_RIGHT 65363
+#define LIN_KEY_ESC 65307 // maybe not needed esc
+
+#define MAC_KEY_W 13
+#define MAC_KEY_A 0
+#define MAC_KEY_S 1
+#define MAC_KEY_D 2
+#define MAC_KEY_UP 126
+#define MAC_KEY_LEFT 123
+#define MAC_KEY_DOWN 125
+#define MAC_KEY_RIGHT 124
+#define MAC_KEY_ESC 53 // maybe not needed esc
+
 /*int worldMap[mapWidth][mapHeight]=
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -56,7 +80,7 @@ void			draw_vert(t_img *img, int x, int y1, int y2, t_data *data, int color)
 		i = 0; 
 	if (y2 > data->mlx.mlx_hei)
 		y2 = data->mlx.mlx_hei;
-	printf("x %d y1 %d y2 %d\n", x, i, y2);
+	//printf("x %d y1 %d y2 %d\n", x, i, y2);
 	while (++i <= y2)
 	{
 		//printf("im %d\n", i);
@@ -193,9 +217,92 @@ void	print_map(char **map)
 	}
 }*/
 
+int		active_key(t_data *data)
+{
+	if (data->keys[MAC_KEY_W] || data->keys[MAC_KEY_A] || data->keys[MAC_KEY_D]
+		|| data->keys[MAC_KEY_S] || data->keys[MAC_KEY_UP] ||
+		data->keys[MAC_KEY_DOWN] || data->keys[MAC_KEY_LEFT] ||
+		data->keys[MAC_KEY_RIGHT] || data->keys[MAC_KEY_ESC])
+		return (OK);
+	return (ERR);
+}
+
+int		player_movements(t_data *data)
+{
+	if (active_key(data))
+	{
+		if (data->keys[MAC_KEY_RIGHT])
+		{
+			ft_printf("ori  is %d\n", (int)data->player.ori);
+			data->player.ori += 2;
+		}
+		if (data->player.ori > 360)
+			data->player.ori -= 360;
+		if (data->player.ori < 0)
+			data->player.ori += 360;
+	}
+	return (OK);
+}
+
+int		linux_mac_keycode(int *keycode)
+{
+	if (*keycode == LIN_KEY_W)
+		*keycode = MAC_KEY_W;
+	else if (*keycode == LIN_KEY_A)
+		*keycode = MAC_KEY_A;
+	else if (*keycode == LIN_KEY_S)
+		*keycode = MAC_KEY_S;
+	else if (*keycode == LIN_KEY_D)
+		*keycode = MAC_KEY_D;
+	else if (*keycode == LIN_KEY_UP)
+		*keycode = MAC_KEY_UP;
+	else if (*keycode == LIN_KEY_DOWN)
+		*keycode = MAC_KEY_DOWN;
+	else if (*keycode == LIN_KEY_LEFT)
+		*keycode = MAC_KEY_LEFT;
+	else if (*keycode == LIN_KEY_RIGHT)
+		*keycode = MAC_KEY_RIGHT;
+	return (OK);
+}
+
+void	show_key(t_data *data)
+{
+	int i = -1;
+	while (++i < 280)
+	{
+		ft_printf("i %d act_key %d\n", i, data->keys[i]);
+	}
+}
+
+int		keypress(int keycode, t_data *data)
+{
+	//if (keycode == 65307); // exit program
+	ft_printf("pressed ");
+	ft_printf("LIN key is: %d\n", keycode);
+	if (LINUX)
+		linux_mac_keycode(&keycode);
+	if (keycode < 280)
+		data->keys[keycode] = 1;
+	//show_key(data);
+	ft_printf("MAC key is: %d\n", keycode);
+	return (OK);
+}
+
+int		keyrelease(int keycode, t_data *data)
+{
+	ft_printf("unpressed ");
+	ft_printf("LIN key is: %d\n", keycode);
+	if (LINUX)
+		linux_mac_keycode(&keycode);
+	if (keycode < 280)
+		data->keys[keycode] = 0;
+	//show_key(data);
+	ft_printf("MAC key is: %d\n", keycode);
+	return (OK);
+}
+
 int		main(int argc, char **argv)
 {
-
 	int		ret_code;
 	t_data	*data;
 	t_img	img;
@@ -208,8 +315,13 @@ int		main(int argc, char **argv)
 		data->mlx.mlx_hei, "Cub3d")))
 		print_errors(ERR_MLX_INIT, &data);
 	mlx_mouse_hide(data->mlx.mlx, data->mlx.mlx_win);
+	// add hook of keypress here
+	mlx_hook(data->mlx.mlx_win, 2, 1L<<0, keypress, data);
+	mlx_hook(data->mlx.mlx_win, 3, 1L<<1, keyrelease, data);
+	//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit
+	// till here
 	img.img = mlx_new_image(data->mlx.mlx, data->mlx.mlx_wid, data->mlx.mlx_hei);
-    img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
 	ray(data, &img);
 	//ray(data, &img, 0x00FF0000);
@@ -217,6 +329,7 @@ int		main(int argc, char **argv)
 	//draw_vert(&img, 2, 100, 111, data, 0x00FF0000);
 
 	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, img.img, 0, 0);
+	//mlx_loop_hook(data->mlx.mlx, player_movements, data);
 	mlx_loop(data->mlx.mlx);
 	free_data(&data);
 	ft_printf("DONE\n");

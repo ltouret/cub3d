@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/08/01 00:37:28 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/20 13:04:54 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ void	init_t_map(t_ok_map *map)
 
 void	init_data(t_data *data)
 {
+	int i;
+
+	i = -1;
+	while (++i < 280)
+		data->keys[i] = 0;
 	data->map_width = 0;
 	data->map_height = 0;
 	data->map = NULL;

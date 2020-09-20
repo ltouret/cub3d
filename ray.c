@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 16:08:52 by ltouret           #+#    #+#             */
-/*   Updated: 2020/09/18 15:21:43 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/20 22:55:51 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ray(t_data *data, t_img *img)
 		//distance = (distance < 1) ? 1 : distance;
 
 		int wallhei = (int)(screen_half_y / (distance));
-		printf("x = %d dist %f wallhei: %d play %f %f\n", ray_count, distance, wallhei, data->player.x, data->player.y);
+		//printf("x = %d dist %f wallhei: %d play %f %f\n", ray_count, distance, wallhei, data->player.x, data->player.y);
 		//printf("x = %d cei %d, wall %d %d, floor %d\n", ray_count, screen_half_y - wallhei, screen_half_y - wallhei, screen_half_y + wallhei, screen_half_y + wallhei);
 
 		int drawStart = 0;

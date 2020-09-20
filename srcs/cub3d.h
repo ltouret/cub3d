@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/08/08 16:14:07 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/20 13:03:19 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ typedef struct		s_data //check for missing data
 	t_player		player;
 	int				map_width;
 	int				map_height;
+	int				keys[280];
 	char			**map;
 }					t_data;
 
