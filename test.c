@@ -59,15 +59,15 @@
 };*/
 
 
-void			draw_pixel(t_img *img, int x, int y, t_data *data, int color)
+void			draw_pixel(t_img **img, int x, int y, t_data *data, int color)
 {
 	char *dst;
 
-    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+    dst = (*img)->addr + (y * (*img)->line_length + x * ((*img)->bits_per_pixel / 8));
 	*(unsigned int *)dst =  color;
 }
 
-void			draw_vert(t_img *img, int x, int y1, int y2, t_data *data, int color)
+void			draw_vert(t_img **img, int x, int y1, int y2, t_data *data, int color)
 {
 	int i;
 
@@ -233,13 +233,42 @@ int		player_movements(t_data *data)
 	{
 		if (data->keys[MAC_KEY_RIGHT])
 		{
-			ft_printf("ori  is %d\n", (int)data->player.ori);
+			//printf("ori  is %f rand %f \n", data->player.ori, data->player.ori * 3.141592 / 180);
 			data->player.ori += 2;
+		}
+		if (data->keys[MAC_KEY_LEFT])
+		{
+			//printf("ori  is %f rand %f\n", data->player.ori, degreeToRadians((float)data->player.ori));
+			data->player.ori -= 2;
+		}
+		if (data->keys[MAC_KEY_UP] || data->keys[MAC_KEY_W])
+		{
+			//ft_printf("up is %d\n", (int)data->player.ori);
+			data->player.x += cos(degreeToRadians(data->player.ori)) * 0.2;
+			data->player.y += sin(degreeToRadians(data->player.ori)) * 0.2;
+			//printf("UP x %f y %f cos %f sin %f\n", data->player.x, data->player.y, cos(degreeToRadians(90)) * 0.2, sin(degreeToRadians(90)) * 0.2);
+		}
+		if (data->keys[MAC_KEY_DOWN] || data->keys[MAC_KEY_S])
+		{
+			data->player.x -= cos(degreeToRadians(data->player.ori)) * 0.2;
+			data->player.y -= sin(degreeToRadians(data->player.ori)) * 0.2;
+			//printf("DW x %f y %f cos %f sin %f\n", data->player.x, data->player.y, cos(degreeToRadians(90)) * 0.2, sin(degreeToRadians(90)) * 0.2);
+		}
+		if (data->keys[MAC_KEY_D])
+		{
+			data->player.x += cos(degreeToRadians(data->player.ori + 90)) * 0.2;
+			data->player.y += sin(degreeToRadians(data->player.ori + 90)) * 0.2;
+		}
+		if (data->keys[MAC_KEY_A])
+		{
+			data->player.x += cos(degreeToRadians(data->player.ori - 90)) * 0.2;
+			data->player.y += sin(degreeToRadians(data->player.ori - 90)) * 0.2;
 		}
 		if (data->player.ori > 360)
 			data->player.ori -= 360;
 		if (data->player.ori < 0)
 			data->player.ori += 360;
+		create_image(data);
 	}
 	return (OK);
 }
@@ -277,27 +306,27 @@ void	show_key(t_data *data)
 int		keypress(int keycode, t_data *data)
 {
 	//if (keycode == 65307); // exit program
-	ft_printf("pressed ");
-	ft_printf("LIN key is: %d\n", keycode);
+	//ft_printf("pressed ");
+	//ft_printf("LIN key is: %d\n", keycode);
 	if (LINUX)
 		linux_mac_keycode(&keycode);
 	if (keycode < 280)
 		data->keys[keycode] = 1;
 	//show_key(data);
-	ft_printf("MAC key is: %d\n", keycode);
+	//ft_printf("MAC key is: %d\n", keycode);
 	return (OK);
 }
 
 int		keyrelease(int keycode, t_data *data)
 {
-	ft_printf("unpressed ");
-	ft_printf("LIN key is: %d\n", keycode);
+	//ft_printf("unpressed ");
+	//ft_printf("LIN key is: %d\n", keycode);
 	if (LINUX)
 		linux_mac_keycode(&keycode);
 	if (keycode < 280)
 		data->keys[keycode] = 0;
 	//show_key(data);
-	ft_printf("MAC key is: %d\n", keycode);
+	//ft_printf("MAC key is: %d\n", keycode);
 	return (OK);
 }
 
@@ -305,7 +334,6 @@ int		main(int argc, char **argv)
 {
 	int		ret_code;
 	t_data	*data;
-	t_img	img;
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
 		print_errors(ret_code, &data);
@@ -320,16 +348,9 @@ int		main(int argc, char **argv)
 	mlx_hook(data->mlx.mlx_win, 3, 1L<<1, keyrelease, data);
 	//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit
 	// till here
-	img.img = mlx_new_image(data->mlx.mlx, data->mlx.mlx_wid, data->mlx.mlx_hei);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-                                 &img.endian);
-	ray(data, &img);
-	//ray(data, &img, 0x00FF0000);
-	//draw_vert(&img, 0, 100, 111, data, 0x00FF0000);
-	//draw_vert(&img, 2, 100, 111, data, 0x00FF0000);
 
-	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, img.img, 0, 0);
-	//mlx_loop_hook(data->mlx.mlx, player_movements, data);
+	mlx_loop_hook(data->mlx.mlx, player_movements, data);
+	create_image(data);
 	mlx_loop(data->mlx.mlx);
 	free_data(&data);
 	ft_printf("DONE\n");

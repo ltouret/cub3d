@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/09/20 13:03:19 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/22 00:16:33 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,4 +142,9 @@ int		add_data(t_data *data);
 int		init(int argc, char **argv, t_data **data);
 void	free_data(t_data **data);
 void	print_errors(int err_code, t_data **data);
+void	ray(t_data *data, t_img **img);
+void	draw_vert(t_img **img, int x, int y1, int y2, t_data *data, int color);
+double	degreeToRadians(double degree);
+int		create_image(t_data *data);
+
 #endif

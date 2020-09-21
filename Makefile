@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2020/08/08 16:53:25 by ltouret          ###   ########.fr        #
+#    Updated: 2020/09/21 20:10:15 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = Cub3D
 SRCS = srcs/check_key.c srcs/free_tab.c srcs/parsing.c srcs/retrieve_color.c \
 		srcs/retrieve_reso.c srcs/retrieve_map.c srcs/retrieve_text.c \
 		srcs/read_file.c srcs/init.c srcs/validate_map.c test.c \
-		srcs/add_data.c srcs/error.c ray.c
+		srcs/add_data.c srcs/error.c ray.c build_img.c
 
 OBJS = ${SRCS:.c=.o}
 
