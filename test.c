@@ -233,36 +233,87 @@ int		player_movements(t_data *data)
 	{
 		if (data->keys[MAC_KEY_RIGHT])
 		{
-			//printf("ori  is %f rand %f \n", data->player.ori, data->player.ori * 3.141592 / 180);
+			printf("ori  is %f\n", data->player.ori);
 			data->player.ori += 2;
+			//data->player.ori = (int) data->player.ori % 360;
 		}
 		if (data->keys[MAC_KEY_LEFT])
 		{
-			//printf("ori  is %f rand %f\n", data->player.ori, degreeToRadians((float)data->player.ori));
+			printf("ori  is %f\n", data->player.ori);
 			data->player.ori -= 2;
+			//data->player.ori = (int) data->player.ori % 360;
 		}
 		if (data->keys[MAC_KEY_UP] || data->keys[MAC_KEY_W])
 		{
 			//ft_printf("up is %d\n", (int)data->player.ori);
-			data->player.x += cos(degreeToRadians(data->player.ori)) * 0.2;
-			data->player.y += sin(degreeToRadians(data->player.ori)) * 0.2;
+			//data->player.y += sin(degreeToRadians(data->player.ori)) * 0.2;
+			//data->player.y += sin(degreeToRadians(data->player.ori)) * 0.2;
 			//printf("UP x %f y %f cos %f sin %f\n", data->player.x, data->player.y, cos(degreeToRadians(90)) * 0.2, sin(degreeToRadians(90)) * 0.2);
+
+			//coa det
+			double playerCos = cos(degreeToRadians(data->player.ori)) * 0.2;
+			double playerSin = sin(degreeToRadians(data->player.ori)) * 0.2;
+			double newX = data->player.x + playerCos;
+			double newY = data->player.y + playerSin;
+			int checkX = (int)(newX + playerCos);
+			int checkY = (int)(newY + playerSin);
+			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			if (data->map[checkY][(int)data->player.x] == '0')
+				data->player.y = newY;
+			if (data->map[(int)data->player.y][checkX] == '0')
+				data->player.x = newX;
 		}
 		if (data->keys[MAC_KEY_DOWN] || data->keys[MAC_KEY_S])
 		{
-			data->player.x -= cos(degreeToRadians(data->player.ori)) * 0.2;
-			data->player.y -= sin(degreeToRadians(data->player.ori)) * 0.2;
+			//data->player.x -= cos(degreeToRadians(data->player.ori)) * 0.2;
+			//data->player.y -= sin(degreeToRadians(data->player.ori)) * 0.2;
 			//printf("DW x %f y %f cos %f sin %f\n", data->player.x, data->player.y, cos(degreeToRadians(90)) * 0.2, sin(degreeToRadians(90)) * 0.2);
+			//coa det
+			double playerCos = cos(degreeToRadians(data->player.ori)) * 0.2;
+			double playerSin = sin(degreeToRadians(data->player.ori)) * 0.2;
+			double newX = data->player.x - playerCos;
+			double newY = data->player.y - playerSin;
+			int checkX = (int)(newX - playerCos);
+			int checkY = (int)(newY - playerSin);
+			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			if (data->map[checkY][(int)data->player.x] == '0')
+				data->player.y = newY;
+			if (data->map[(int)data->player.y][checkX] == '0')
+				data->player.x = newX;
 		}
 		if (data->keys[MAC_KEY_D])
 		{
-			data->player.x += cos(degreeToRadians(data->player.ori + 90)) * 0.2;
-			data->player.y += sin(degreeToRadians(data->player.ori + 90)) * 0.2;
+			//data->player.x += cos(degreeToRadians(data->player.ori + 90)) * 0.2;
+			//data->player.y += sin(degreeToRadians(data->player.ori + 90)) * 0.2;
+			//coa det
+			double playerCos = cos(degreeToRadians(data->player.ori + 90)) * 0.2;
+			double playerSin = sin(degreeToRadians(data->player.ori + 90)) * 0.2;
+			double newX = data->player.x + playerCos;
+			double newY = data->player.y + playerSin;
+			int checkX = (int)(newX + playerCos);
+			int checkY = (int)(newY + playerSin);
+			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			if (data->map[checkY][(int)data->player.x] == '0')
+				data->player.y = newY;
+			if (data->map[(int)data->player.y][checkX] == '0')
+				data->player.x = newX;
 		}
 		if (data->keys[MAC_KEY_A])
 		{
-			data->player.x += cos(degreeToRadians(data->player.ori - 90)) * 0.2;
-			data->player.y += sin(degreeToRadians(data->player.ori - 90)) * 0.2;
+			//data->player.x += cos(degreeToRadians(data->player.ori - 90)) * 0.2;
+			//data->player.y += sin(degreeToRadians(data->player.ori - 90)) * 0.2;
+			//coa det
+			double playerCos = cos(degreeToRadians(data->player.ori - 90)) * 0.2;
+			double playerSin = sin(degreeToRadians(data->player.ori - 90)) * 0.2;
+			double newX = data->player.x + playerCos;
+			double newY = data->player.y + playerSin;
+			int checkX = (int)(newX + playerCos);
+			int checkY = (int)(newY + playerSin);
+			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			if (data->map[checkY][(int)data->player.x] == '0')
+				data->player.y = newY;
+			if (data->map[(int)data->player.y][checkX] == '0')
+				data->player.x = newX;
 		}
 		if (data->player.ori > 360)
 			data->player.ori -= 360;
@@ -349,8 +400,8 @@ int		main(int argc, char **argv)
 	//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit
 	// till here
 
-	mlx_loop_hook(data->mlx.mlx, player_movements, data);
 	create_image(data);
+	mlx_loop_hook(data->mlx.mlx, player_movements, data);
 	mlx_loop(data->mlx.mlx);
 	free_data(&data);
 	ft_printf("DONE\n");
