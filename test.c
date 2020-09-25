@@ -98,14 +98,14 @@ void	print_map(char **map)
 		ft_printf("%s\n", map[i++]);
 }
 
-/*void	ray(t_data *data, ts_data *img, int color)
+void	ray(t_data *data, t_img **img)
 {
 	char **worldMap = data->map;
 	double posX = data->player.x, posY = data->player.y;  //x and y start position
 	//ft_printf("%d %d",(int) posY, (int)posX);
 	//double posX = 22, posY = 12;  //x and y start position
-	double dirX = -1, dirY = 0; //initial direction vector
-	double planeX = 0, planeY = 0.66; //the 2d raycaster version of camera plane
+	double dirX = 0, dirY = 1; //initial direction vector
+	double planeX = 0.66, planeY = 0; //the 2d raycaster version of camera plane
 
 	int x;
 	int h;
@@ -134,7 +134,7 @@ void	print_map(char **map)
 		double deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : fabs(1 / rayDirY));
 		//double deltaDistX = fabs(1 / rayDirX);
 		//double deltaDistY = fabs(1 / rayDirY); 
-		printf("x is : %d ray: %f %f, delta %f %f\n",x, rayDirX, rayDirY, deltaDistX, deltaDistY);
+		//printf("x is : %d ray: %f %f, delta %f %f\n",x, rayDirX, rayDirY, deltaDistX, deltaDistY);
 		double perpWallDist;
 		
 		//what direction to step in x or y-direction (either +1 or -1)
@@ -181,10 +181,11 @@ void	print_map(char **map)
 		    mapY += stepY;
 		    side = 1;
 		  }
-		  printf("this is x %d dist: %f %f and %d %d and %c side : %d\n", x, sideDistY, sideDistX, mapX, mapY, worldMap[mapY][mapX], side);
+		  //printf("this is x %d dist: %f %f and %d %d and %c side : %d\n", x, sideDistY, sideDistX, mapX, mapY, worldMap[mapY][mapX], side);
 		  //Check if ray has hit a wall
 		   if (worldMap[mapY][mapX] == '1') hit = 1;
 		} 
+		printf("x %d side %d\n", x, side);
 		if (side == 0) perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
       else           perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
 
@@ -195,10 +196,10 @@ void	print_map(char **map)
       if(drawStart < 0)drawStart = 0;
       int drawEnd = lineHeight / 2 + h / 2;
       if (drawEnd >= h)drawEnd = h - 1;
-		printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
+		//printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
 		draw_vert(img, x, drawStart, drawEnd, data, 0x00FF0000);
 		// TODO add color stuff here!
-	 color;
+	 /*color;
       switch(worldMap[mapX][mapY])
       {
         case 1:  color = RGB_Red;  break; //red
@@ -206,16 +207,16 @@ void	print_map(char **map)
         case 3:  color = RGB_Blue;   break; //blue
         case 4:  color = RGB_White;  break; //white
         default: color = RGB_Yellow; break; //yellow
-      }
+      }*/
 
       //give x and y sides different brightness
-      if (side == 1) {color = color / 2;}
+      //if (side == 1) {color = color / 2;}
 
       //draw the pixels of the stripe as a vertical line
      // verLine(x, drawStart, drawEnd, color);
 		x++;
 	}
-}*/
+}
 
 int		active_key(t_data *data)
 {
@@ -233,13 +234,13 @@ int		player_movements(t_data *data)
 	{
 		if (data->keys[MAC_KEY_RIGHT])
 		{
-			printf("ori  is %f\n", data->player.ori);
+			//printf("ori  is %f\n", data->player.ori);
 			data->player.ori += 2;
 			//data->player.ori = (int) data->player.ori % 360;
 		}
 		if (data->keys[MAC_KEY_LEFT])
 		{
-			printf("ori  is %f\n", data->player.ori);
+			//printf("ori  is %f\n", data->player.ori);
 			data->player.ori -= 2;
 			//data->player.ori = (int) data->player.ori % 360;
 		}
@@ -257,7 +258,7 @@ int		player_movements(t_data *data)
 			double newY = data->player.y + playerSin;
 			int checkX = (int)(newX + playerCos);
 			int checkY = (int)(newY + playerSin);
-			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			//printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
 			if (data->map[checkY][(int)data->player.x] == '0')
 				data->player.y = newY;
 			if (data->map[(int)data->player.y][checkX] == '0')
@@ -275,7 +276,7 @@ int		player_movements(t_data *data)
 			double newY = data->player.y - playerSin;
 			int checkX = (int)(newX - playerCos);
 			int checkY = (int)(newY - playerSin);
-			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			//printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
 			if (data->map[checkY][(int)data->player.x] == '0')
 				data->player.y = newY;
 			if (data->map[(int)data->player.y][checkX] == '0')
@@ -292,7 +293,7 @@ int		player_movements(t_data *data)
 			double newY = data->player.y + playerSin;
 			int checkX = (int)(newX + playerCos);
 			int checkY = (int)(newY + playerSin);
-			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			//printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
 			if (data->map[checkY][(int)data->player.x] == '0')
 				data->player.y = newY;
 			if (data->map[(int)data->player.y][checkX] == '0')
@@ -309,7 +310,7 @@ int		player_movements(t_data *data)
 			double newY = data->player.y + playerSin;
 			int checkX = (int)(newX + playerCos);
 			int checkY = (int)(newY + playerSin);
-			printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
+			//printf("nX %f nY %f map %d\n", newX, newY, data->map[(int)newY][(int)newX]);
 			if (data->map[checkY][(int)data->player.x] == '0')
 				data->player.y = newY;
 			if (data->map[(int)data->player.y][checkX] == '0')
@@ -319,6 +320,7 @@ int		player_movements(t_data *data)
 			data->player.ori -= 360;
 		if (data->player.ori < 0)
 			data->player.ori += 360;
+		//printf("X %f Y %f ori %f\n", data->player.x, data->player.y, data->player.ori);//, data->map[(int)newY][(int)newX]);
 		create_image(data);
 	}
 	return (OK);

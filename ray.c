@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 16:08:52 by ltouret           #+#    #+#             */
-/*   Updated: 2020/09/22 15:03:08 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/25 21:34:31 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void            my_mlx_pixel_put(t_img **img, int x, int y, int color)
     *(unsigned int*)dst = color;
 }
 
-void	ray(t_data *data, t_img **img)
+/*void	ray(t_data *data, t_img **img)
 {
 	int		screen_half_x = data->mlx.mlx_wid / 2;
 	int		screen_half_y = data->mlx.mlx_hei / 2;
@@ -59,9 +59,31 @@ void	ray(t_data *data, t_img **img)
 		{
 			mapX += rayCos;
 			mapY += raySin;
-			wall = data->map[(int)floor(mapY)][(int)floor(mapX)];
+			wall = data->map[(int)mapY][(int)mapX];
 			//if (wall == '1')
 			//	ft_printf("%d %d %c\n",(int) mapX,(int) mapY, wall);
+		}
+		//printf("ray_ang %d ray_c %d X %f Y %f\n", 90 - (int)ray_angle % 90, ray_count, mapX, mapY);
+		if (1)
+		{
+			double Ay;
+			double Ax;
+			double Ya;
+			double Xa;
+			if (data->player.ori > 180)
+			{
+				Ay = ((int)(data->player.y / 1)) * 1 - 1;
+				Ya = -1;
+			}
+			else
+			{
+				Ay = ((int)(data->player.y / 1)) * 1 + 1;
+				Ya = 1;
+			}
+			Ax = (int)(data->player.x + ((data->player.y - Ay) / ? :tan(degreeToRadians(abs(360 - ray_angle)))));
+			//printf("x %d int %c\n", ray_count, data->map[(int)Ay][(int)Ax]);
+			Xa = 1 / tan(degreeToRadians(ray_angle));
+			printf("x %d alpha %f ori %f Ay %f Ax %f Xa %f\n", ray_count, ray_angle, data->player.ori, Ay, Ax, Xa);
 		}
 		double distance = sqrt(pow(data->player.x - mapX, 2) + pow(data->player.y - mapY, 2));
 		distance *= cos(degreeToRadians(ray_angle - data->player.ori)); 
@@ -75,10 +97,10 @@ void	ray(t_data *data, t_img **img)
 		int drawEnd = screen_half_y - wallhei;
 		//printf("%d %d %d\n", wallhei, drawStart, drawEnd);
 		//TODO check print pixels, algunos pixeles se estan llenando de ceiling y walls or walls y floor! 
-		draw_vert(img, ray_count, drawStart, drawEnd, data, 0x00FFFF);
+		//draw_vert(img, ray_count, drawStart, drawEnd, data, 0x00FFFF);
 		draw_vert(img, ray_count, screen_half_y - wallhei, screen_half_y + wallhei, data, 0x00FF0000);
-		draw_vert(img, ray_count, screen_half_y + wallhei, data->mlx.mlx_hei, data, 0x0000AA00);
+		//draw_vert(img, ray_count, screen_half_y + wallhei, data->mlx.mlx_hei, data, 0x0000AA00);
 		ray_angle += rayc_incr_angle;
 		ray_count++;
 	}
-}
+}*/
