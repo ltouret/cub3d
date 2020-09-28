@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/09/22 00:16:33 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/28 21:17:46 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,10 @@ typedef struct		s_player
 	double			ori;
 	double			x;
 	double			y;
+	double			dirX;
+	double			dirY;
+	double			planeX;
+	double			planeY;
 }					t_player;
 
 typedef struct		s_img
