@@ -232,7 +232,7 @@ int		player_movements(t_data *data)
 {
 	if (active_key(data))
 	{
-		if (data->keys[MAC_KEY_RIGHT])
+		if (data->keys[MAC_KEY_LEFT])
 		{
 			//printf("ori  is %f\n", data->player.ori);
 			//data->player.ori += 2;
@@ -244,7 +244,7 @@ int		player_movements(t_data *data)
 			data->player.planeX = data->player.planeX * cos(-0.04) - data->player.planeY * sin(-0.04);
 			data->player.planeY = oldPlaneX * sin(-0.04) + data->player.planeY * cos(-0.04);
 		}
-		if (data->keys[MAC_KEY_LEFT])
+		if (data->keys[MAC_KEY_RIGHT])
 		{
 			//printf("ori  is %f\n", data->player.ori);
 			//data->player.ori -= 2;
@@ -264,9 +264,8 @@ int		player_movements(t_data *data)
 			//printf("UP x %f y %f cos %f sin %f\n", data->player.x, data->player.y, cos(degreeToRadians(90)) * 0.2, sin(degreeToRadians(90)) * 0.2);
 
 			// new coa det
-			printf("x %f y %f\n", data->player.x, data->player.y);
-			if(data->map[(int)(data->player.y + data->player.dirY * 0.02)][(int)(data->player.x)] == '0') data->player.x += data->player.dirX * 0.02;
-			if(data->map[(int)(data->player.y)][(int)(data->player.x + data->player.dirX * 0.02)] == '0') data->player.y += data->player.dirY * 0.02;
+			if(data->map[(int)(data->player.y + data->player.dirY * 0.02)][(int)(data->player.x)] == '0') data->player.y += data->player.dirY * 0.02;
+			if(data->map[(int)(data->player.y)][(int)(data->player.x + data->player.dirX * 0.02)] == '0') data->player.x += data->player.dirX * 0.02;
 			//coa det
 			/*double playerCos = cos(degreeToRadians(data->player.ori)) * 0.2;
 			double playerSin = sin(degreeToRadians(data->player.ori)) * 0.2;
@@ -286,8 +285,8 @@ int		player_movements(t_data *data)
 			//data->player.y -= sin(degreeToRadians(data->player.ori)) * 0.2;
 			//printf("DW x %f y %f cos %f sin %f\n", data->player.x, data->player.y, cos(degreeToRadians(90)) * 0.2, sin(degreeToRadians(90)) * 0.2);
 			// new coa det
-			if(data->map[(int)(data->player.y - data->player.dirY * 0.02)][(int)(data->player.x)] == '0') data->player.x -= data->player.dirX * 0.02;
-			if(data->map[(int)(data->player.y)][(int)(data->player.x - data->player.dirX * 0.02)] == '0') data->player.y -= data->player.dirY * 0.02;
+			if(data->map[(int)(data->player.y - data->player.dirY * 0.03)][(int)(data->player.x)] == '0') data->player.y -= data->player.dirY * 0.03;
+			if(data->map[(int)(data->player.y)][(int)(data->player.x - data->player.dirX * 0.03)] == '0') data->player.x -= data->player.dirX * 0.03;
 			//coa det
 			/*double playerCos = cos(degreeToRadians(data->player.ori)) * 0.2;
 			double playerSin = sin(degreeToRadians(data->player.ori)) * 0.2;
@@ -305,8 +304,11 @@ int		player_movements(t_data *data)
 		{
 			//data->player.x += cos(degreeToRadians(data->player.ori + 90)) * 0.2;
 			//data->player.y += sin(degreeToRadians(data->player.ori + 90)) * 0.2;
+			// new coa det
+			if(data->map[(int)(data->player.y + data->player.planeY * 0.03)][(int)(data->player.x)] == '0') data->player.y += data->player.planeY * 0.03;
+			if(data->map[(int)(data->player.y)][(int)(data->player.x + data->player.planeX * 0.03)] == '0') data->player.x += data->player.planeX * 0.03;
 			//coa det
-			double playerCos = cos(degreeToRadians(data->player.ori + 90)) * 0.2;
+			/*double playerCos = cos(degreeToRadians(data->player.ori + 90)) * 0.2;
 			double playerSin = sin(degreeToRadians(data->player.ori + 90)) * 0.2;
 			double newX = data->player.x + playerCos;
 			double newY = data->player.y + playerSin;
@@ -316,14 +318,17 @@ int		player_movements(t_data *data)
 			if (data->map[checkY][(int)data->player.x] == '0')
 				data->player.y = newY;
 			if (data->map[(int)data->player.y][checkX] == '0')
-				data->player.x = newX;
+				data->player.x = newX;*/
 		}
 		if (data->keys[MAC_KEY_A])
 		{
 			//data->player.x += cos(degreeToRadians(data->player.ori - 90)) * 0.2;
 			//data->player.y += sin(degreeToRadians(data->player.ori - 90)) * 0.2;
+			// new coa det
+			if(data->map[(int)(data->player.y - data->player.planeY * 0.03)][(int)(data->player.x)] == '0') data->player.y -= data->player.planeY * 0.03;
+			if(data->map[(int)(data->player.y)][(int)(data->player.x - data->player.planeX * 0.03)] == '0') data->player.x -= data->player.planeX * 0.03;
 			//coa det
-			double playerCos = cos(degreeToRadians(data->player.ori - 90)) * 0.2;
+			/*double playerCos = cos(degreeToRadians(data->player.ori - 90)) * 0.2;
 			double playerSin = sin(degreeToRadians(data->player.ori - 90)) * 0.2;
 			double newX = data->player.x + playerCos;
 			double newY = data->player.y + playerSin;
@@ -333,13 +338,17 @@ int		player_movements(t_data *data)
 			if (data->map[checkY][(int)data->player.x] == '0')
 				data->player.y = newY;
 			if (data->map[(int)data->player.y][checkX] == '0')
-				data->player.x = newX;
+				data->player.x = newX;*/
 		}
-		if (data->player.ori > 360)
+		/*if (data->player.ori > 360)
 			data->player.ori -= 360;
 		if (data->player.ori < 0)
-			data->player.ori += 360;
+			data->player.ori += 360;*/
 		//printf("X %f Y %f ori %f\n", data->player.x, data->player.y, data->player.ori);//, data->map[(int)newY][(int)newX]);
+		//printf("x %f %f y %f\n", data->player.x - (int)(data->player.x), data->player.x, data->player.y);
+		// check this out to fix weird full coord mode
+		data->player.x += ((data->player.x - ((int)data->player.x)) >= 0.999) ? 0.002 : 0;
+		printf("x %f %f y %f\n", data->player.x - (int)(data->player.x), data->player.x, data->player.y);
 		create_image(data);
 	}
 	return (OK);

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/09/28 21:18:38 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/09/30 00:30:46 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ void	init_data(t_data *data)
 	data->player.y = 0;
 	data->player.ori = 0;
 	data->player.dirX = 0;
-	data->player.dirY = 1;
-	data->player.planeX = 0.66;
-	data->player.planeY = 0; // change this BS
+	data->player.dirY = 0;
+	data->player.planeX = 0;
+	data->player.planeY = 0;
 }
 
 int		missing_data(t_ok_map *map)
