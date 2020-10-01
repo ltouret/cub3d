@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/01 11:07:34 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/01 23:43:50 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct		s_player
 {
 	double			x;
 	double			y;
+	char			ori;
 	double			dirX;
 	double			dirY;
 	double			planeX;

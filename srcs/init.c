@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/01 11:07:47 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/02 00:23:55 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	init_data(t_data *data)
 	data->color.c_color= 0;
 	data->player.x = 0;
 	data->player.y = 0;
+	data->player.ori = 0;
 	data->player.dirX = 0;
 	data->player.dirY = 0;
 	data->player.planeX = 0;

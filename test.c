@@ -228,6 +228,21 @@ int		active_key(t_data *data)
 	return (ERR);
 }
 
+void	rotate_player(t_data *data, int dir_flag) // maybe use define here istead of random dir_flag
+{
+	double	rot_speed;
+	double	oldDirX;
+	double	oldPlaneX;
+
+	rot_speed = (ft_find("NE", data->player.ori) != -1 ? -0.015 : 0.015) * dir_flag;
+	oldDirX = data->player.dirX;
+	data->player.dirX = data->player.dirX * cos(rot_speed) - data->player.dirY * sin(rot_speed);
+	data->player.dirY = oldDirX * sin(rot_speed) + data->player.dirY * cos(rot_speed);
+	oldPlaneX = data->player.planeX;
+	data->player.planeX = data->player.planeX * cos(rot_speed) - data->player.planeY * sin(rot_speed);
+	data->player.planeY = oldPlaneX * sin(rot_speed) + data->player.planeY * cos(rot_speed);
+}
+
 int		player_movements(t_data *data)
 {
 	if (active_key(data))
@@ -236,33 +251,13 @@ int		player_movements(t_data *data)
 		double	mov_speed;
 		int		radius;
 
-		rot_speed = 0.03;
-		mov_speed = 0.03;
-		radius = 10;
+		rot_speed = 0.02; // get this values into data->player
+		mov_speed = 0.02;
+		radius = 5; // 10 or 5 ?
 		if (data->keys[MAC_KEY_LEFT])
-		{
-			//printf("ori  is %f\n", data->player.ori);
-			//data->player.ori += 2;
-			//data->player.ori = (int) data->player.ori % 360;
-			double oldDirX = data->player.dirX;
-			data->player.dirX = data->player.dirX * cos(-rot_speed) - data->player.dirY * sin(-rot_speed);
-			data->player.dirY = oldDirX * sin(-rot_speed) + data->player.dirY * cos(-rot_speed);
-			double oldPlaneX = data->player.planeX;
-			data->player.planeX = data->player.planeX * cos(-rot_speed) - data->player.planeY * sin(-rot_speed);
-			data->player.planeY = oldPlaneX * sin(-rot_speed) + data->player.planeY * cos(-rot_speed);
-		}
+			rotate_player(data, 1);
 		if (data->keys[MAC_KEY_RIGHT])
-		{
-			//printf("ori  is %f\n", data->player.ori);
-			//data->player.ori -= 2;
-			//data->player.ori = (int) data->player.ori % 360;
-			double oldDirX = data->player.dirX;
-			data->player.dirX = data->player.dirX * cos(rot_speed) - data->player.dirY * sin(rot_speed);
-			data->player.dirY = oldDirX * sin(rot_speed) + data->player.dirY * cos(rot_speed);
-			double oldPlaneX = data->player.planeX;
-			data->player.planeX = data->player.planeX * cos(rot_speed) - data->player.planeY * sin(rot_speed);
-			data->player.planeY = oldPlaneX * sin(rot_speed) + data->player.planeY * cos(rot_speed);
-		}
+			rotate_player(data, -1);
 		if (data->keys[MAC_KEY_UP] || data->keys[MAC_KEY_W])
 		{
 			// new coa det
@@ -291,7 +286,7 @@ int		player_movements(t_data *data)
 		//printf("x %f %f y %f\n", data->player.x - (int)(data->player.x), data->player.x, data->player.y);
 		// check this out to fix weird full coord mode
 		//data->player.x += ((data->player.x - ((int)data->player.x)) >= 0.999) ? 0.002 : 0;
-		printf("x %f %f y %f\n", data->player.x - (int)(data->player.x), data->player.x, data->player.y);
+		printf("y %f x %f\n", data->player.y, data->player.x);
 		create_image(data);
 	}
 	return (OK);
