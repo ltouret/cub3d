@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 00:34:19 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/01 23:45:04 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/02 17:11:41 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void	handle_player(t_data *data, char *map_line)
 		{
 			if (map_line[i] == 'N' || map_line[i] == 'S')
 			{
-				data->player.dirY = (map_line[i] == 'N') ? -1 : 1;
-				data->player.planeX = 0.66;
+				data->player.dir_y = (map_line[i] == 'N') ? -1 : 1;
+				data->player.plane_x = 0.66;
 			}
 			else if (map_line[i] == 'W' || map_line[i] == 'E')
 			{
-				data->player.dirX = (map_line[i] == 'W') ? -1 : 1;
-				data->player.planeY = 0.66;
+				data->player.dir_x = (map_line[i] == 'W') ? -1 : 1;
+				data->player.plane_y = 0.66;
 			}
 			data->player.x = i + 0.5;
 			data->player.y = data->map_height + 0.5;

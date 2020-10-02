@@ -1,5 +1,6 @@
 #include "srcs/cub3d.h"
 #include "mlx.h"
+#include "player_mov.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -72,15 +73,15 @@ void			draw_vert(t_img **img, int x, int y1, int y2, t_data *data, int color)
 	int i;
 
 	i = y1 - 1;
-	if (i > data->mlx.mlx_hei)
+	/*if (i > data->mlx.mlx_hei)
 		i = data->mlx.mlx_hei;
 	if (y2 < 0)
 		y2 = 0;
 	if (i < 0)
 		i = 0; 
 	if (y2 > data->mlx.mlx_hei)
-		y2 = data->mlx.mlx_hei;
-	//printf("x %d y1 %d y2 %d\n", x, i, y2);
+		y2 = data->mlx.mlx_hei;*/
+	printf("x %d y1 %d y2 %d\n", x, i, y2);
 	while (++i <= y2)
 	{
 		//printf("im %d\n", i);
@@ -118,8 +119,8 @@ void	ray(t_data *data, t_img **img)
 	{
 		//calculate ray position and direction
 		double cameraX = 2 * x / (double)w - 1; //x-coordinate in camera space
-		double rayDirX = data->player.dirX + data->player.planeX * cameraX;
-		double rayDirY = data->player.dirY + data->player.planeY * cameraX;
+		double rayDirX = data->player.dir_x + data->player.plane_x * cameraX;
+		double rayDirY = data->player.dir_y + data->player.plane_y * cameraX;
 		//ft_printf("%d\n", x);
 
 		int mapX = (int)posX;
@@ -228,65 +229,22 @@ int		active_key(t_data *data)
 	return (ERR);
 }
 
-void	rotate_player(t_data *data, int dir_flag) // maybe use define here istead of random dir_flag
-{
-	double	rot_speed;
-	double	oldDirX;
-	double	oldPlaneX;
-
-	rot_speed = (ft_find("NE", data->player.ori) != -1 ? -0.015 : 0.015) * dir_flag;
-	oldDirX = data->player.dirX;
-	data->player.dirX = data->player.dirX * cos(rot_speed) - data->player.dirY * sin(rot_speed);
-	data->player.dirY = oldDirX * sin(rot_speed) + data->player.dirY * cos(rot_speed);
-	oldPlaneX = data->player.planeX;
-	data->player.planeX = data->player.planeX * cos(rot_speed) - data->player.planeY * sin(rot_speed);
-	data->player.planeY = oldPlaneX * sin(rot_speed) + data->player.planeY * cos(rot_speed);
-}
-
 int		player_movements(t_data *data)
 {
 	if (active_key(data))
 	{
-		double	rot_speed;
-		double	mov_speed;
-		int		radius;
-
-		rot_speed = 0.02; // get this values into data->player
-		mov_speed = 0.02;
-		radius = 5; // 10 or 5 ?
 		if (data->keys[MAC_KEY_LEFT])
-			rotate_player(data, 1);
+			rotate_player(data, ROT_LEFT);
 		if (data->keys[MAC_KEY_RIGHT])
-			rotate_player(data, -1);
+			rotate_player(data, ROT_RIGHT);
 		if (data->keys[MAC_KEY_UP] || data->keys[MAC_KEY_W])
-		{
-			// new coa det
-			if(data->map[(int)(data->player.y + data->player.dirY * mov_speed * radius)][(int)(data->player.x)] == '0') data->player.y += data->player.dirY * mov_speed;
-			if(data->map[(int)(data->player.y)][(int)(data->player.x + data->player.dirX * mov_speed * radius)] == '0') data->player.x += data->player.dirX * mov_speed;
-		}
+			move_player_ns(data, MOV_W);
 		if (data->keys[MAC_KEY_DOWN] || data->keys[MAC_KEY_S])
-		{
-			// new coa det
-			if(data->map[(int)(data->player.y - data->player.dirY * mov_speed * radius)][(int)(data->player.x)] == '0') data->player.y -= data->player.dirY * mov_speed;
-			if(data->map[(int)(data->player.y)][(int)(data->player.x - data->player.dirX * mov_speed * radius)] == '0') data->player.x -= data->player.dirX * mov_speed;
-		}
+			move_player_ns(data, MOV_S);
 		if (data->keys[MAC_KEY_D])
-		{
-			// new coa det
-			if(data->map[(int)(data->player.y + data->player.planeY * mov_speed * radius)][(int)(data->player.x)] == '0') data->player.y += data->player.planeY * mov_speed;
-			if(data->map[(int)(data->player.y)][(int)(data->player.x + data->player.planeX * mov_speed * radius)] == '0') data->player.x += data->player.planeX * mov_speed;
-		}
+			move_player_we(data, MOV_D);
 		if (data->keys[MAC_KEY_A])
-		{
-			// new coa det
-			if(data->map[(int)(data->player.y - data->player.planeY * mov_speed * radius)][(int)(data->player.x)] == '0') data->player.y -= data->player.planeY * mov_speed;
-			if(data->map[(int)(data->player.y)][(int)(data->player.x - data->player.planeX * mov_speed * radius)] == '0') data->player.x -= data->player.planeX * mov_speed;
-		}
-		//printf("X %f Y %f ori %f\n", data->player.x, data->player.y, data->player.ori);//, data->map[(int)newY][(int)newX]);
-		//printf("x %f %f y %f\n", data->player.x - (int)(data->player.x), data->player.x, data->player.y);
-		// check this out to fix weird full coord mode
-		//data->player.x += ((data->player.x - ((int)data->player.x)) >= 0.999) ? 0.002 : 0;
-		printf("y %f x %f\n", data->player.y, data->player.x);
+			move_player_we(data, MOV_A);
 		create_image(data);
 	}
 	return (OK);
@@ -356,8 +314,6 @@ int		main(int argc, char **argv)
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
 		print_errors(ret_code, &data);
-	//ft_printf("%d %d\n", (int)data->player.x, (int)data->player.y);
-	//print_map(data->map);
 	if (!(data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid,
 		data->mlx.mlx_hei, "Cub3d")))
 		print_errors(ERR_MLX_INIT, &data);
@@ -365,7 +321,7 @@ int		main(int argc, char **argv)
 	// add hook of keypress here
 	mlx_hook(data->mlx.mlx_win, 2, 1L<<0, keypress, data);
 	mlx_hook(data->mlx.mlx_win, 3, 1L<<1, keyrelease, data);
-	//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit
+	//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit with esc & free
 	// till here
 
 	create_image(data);

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/02 00:23:55 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/02 17:10:27 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	init_t_map(t_ok_map *map)
 	map->map_end = 0;
 }
 
-void	init_data(t_data *data)
+void	init_data(t_data *data) // separate init to map - player - etc
 {
 	int i;
 
@@ -49,10 +49,13 @@ void	init_data(t_data *data)
 	data->player.x = 0;
 	data->player.y = 0;
 	data->player.ori = 0;
-	data->player.dirX = 0;
-	data->player.dirY = 0;
-	data->player.planeX = 0;
-	data->player.planeY = 0;
+	data->player.dir_x = 0;
+	data->player.dir_y = 0;
+	data->player.plane_x = 0;
+	data->player.plane_y = 0;
+	data->player.rot_speed = 0.015;
+	data->player.mov_speed = 0.02;
+	data->player.radius = 5;
 }
 
 int		missing_data(t_ok_map *map)
