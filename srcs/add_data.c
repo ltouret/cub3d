@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 00:34:19 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/02 17:11:41 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/05 14:07:09 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,36 @@ void	handle_player(t_data *data, char *map_line)
 
 //static	int	add_text(t_data);
 
+int		load_text(t_data *data, t_text_img *text_img, char *text_path)
+{
+	if (!(text_img->img = mlx_xpm_file_to_image(data->mlx.mlx, text_path,
+		&text_img->wid, &text_img->hei)))
+		return (ERR_MLX);
+	if (!(text_img->addr = mlx_get_data_addr(text_img->img, &text_img->bpp,
+		&text_img->size, &text_img->endian)))
+		return (ERR_MLX);
+	return (OK);
+}
+
 int		add_data(t_data *data)
 {
 	int		ret_code;
 
+	if ((ret_code = load_text(data, &data->mlx.no_text, data->text_path.no))
+		!= OK)
+		return (ret_code);
+	if ((ret_code = load_text(data, &data->mlx.so_text, data->text_path.so))
+		!= OK)
+		return (ret_code);
+	if ((ret_code = load_text(data, &data->mlx.ea_text, data->text_path.ea))
+		!= OK)
+		return (ret_code);
+	if ((ret_code = load_text(data, &data->mlx.we_text, data->text_path.we))
+		!= OK)
+		return (ret_code);
+	if ((ret_code = load_text(data, &data->mlx.sp_text, data->text_path.sp))
+		!= OK)
+		return (ret_code);
 	if ((ret_code = validate_map(data)) != OK)
 		return (ret_code);
 	return (OK);

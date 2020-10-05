@@ -64,7 +64,7 @@ void			draw_pixel(t_img **img, int x, int y, t_data *data, int color)
 {
 	char *dst;
 
-    dst = (*img)->addr + (y * (*img)->line_length + x * ((*img)->bits_per_pixel / 8));
+    dst = (*img)->addr + (y * (*img)->line_length + x * ((*img)->bpp / 8));
 	*(unsigned int *)dst =  color;
 }
 
@@ -81,7 +81,7 @@ void			draw_vert(t_img **img, int x, int y1, int y2, t_data *data, int color)
 		i = 0; 
 	if (y2 > data->mlx.mlx_hei)
 		y2 = data->mlx.mlx_hei;*/
-	printf("x %d y1 %d y2 %d\n", x, i, y2);
+	//printf("x %d y1 %d y2 %d\n", x, i, y2);
 	while (++i <= y2)
 	{
 		//printf("im %d\n", i);
@@ -307,6 +307,8 @@ int		keyrelease(int keycode, t_data *data)
 	return (OK);
 }
 
+//int		load_text(it_data *data, )
+
 int		main(int argc, char **argv)
 {
 	int		ret_code;
@@ -319,6 +321,7 @@ int		main(int argc, char **argv)
 		print_errors(ERR_MLX_INIT, &data);
 	mlx_mouse_hide(data->mlx.mlx, data->mlx.mlx_win);
 	// add hook of keypress here
+	//load_text(data);
 	mlx_hook(data->mlx.mlx_win, 2, 1L<<0, keypress, data);
 	mlx_hook(data->mlx.mlx_win, 3, 1L<<1, keyrelease, data);
 	//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit with esc & free

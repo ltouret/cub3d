@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/02 17:05:54 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/05 14:07:47 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@
 # define ERR_MISS_PLA 49
 
 # define ERR_MLX_INIT 51
+# define ERR_MLX 52
 
 typedef struct		s_ok_map
 {
@@ -65,21 +66,37 @@ typedef struct		s_ok_map
 	int				player;
 }					t_ok_map;
 
+typedef struct		s_text_img
+{
+	int				wid;
+	int				hei;
+	int				bpp;
+	int				size;
+	int				endian;
+	void			*img;
+	char			*addr;
+}					t_text_img;
+
 typedef struct		s_mlx //add text struc here
 {
 	void			*mlx;
 	void			*mlx_win;
 	int				mlx_wid;
 	int				mlx_hei;
+	t_text_img		no_text;
+	t_text_img		so_text;
+	t_text_img		ea_text;
+	t_text_img		we_text;
+	t_text_img		sp_text;
 }					t_mlx;
 
 typedef struct		s_text_path
 {
-	char			*no_text;
-	char			*so_text;
-	char			*we_text;
-	char			*ea_text;
-	char			*s_text;
+	char			*no;
+	char			*so;
+	char			*we;
+	char			*ea;
+	char			*sp;
 }					t_text_path;
 
 typedef struct		s_color
@@ -106,7 +123,7 @@ typedef struct		s_img
 {
 	void			*img;
 	char			*addr;
-	int				bits_per_pixel;
+	int				bpp;
 	int				line_length;
 	int				endian;
 }					t_img;

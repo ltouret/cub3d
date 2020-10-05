@@ -3,7 +3,7 @@ WE ./textures/GrayWalls.xpm
 EA ./textures/GrayWalls.xpm
 NO ./textures/GrayWalls.xpm
 SO ./textures/GrayWalls.xpm
-S ./textures/GrayWalls.xpm
+S ./textures/barrel.xpm
 
 F 255,10,0
 C 0,200,250

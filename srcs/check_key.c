@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:59:06 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/10 23:57:22 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/03 13:10:09 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		check_text(char *path)
 
 	if ((fd = open(path, O_RDONLY)) == -1)
 		return (ERR_TEXT);
+	close(fd);
 	return (OK);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/02 17:10:27 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/05 14:05:06 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ void	init_data(t_data *data) // separate init to map - player - etc
 	data->map = NULL;
 	data->mlx.mlx = NULL;
 	data->mlx.mlx_win = NULL;
-	data->text_path.no_text = NULL;
-	data->text_path.so_text = NULL;
-	data->text_path.ea_text = NULL;
-	data->text_path.we_text = NULL;
-	data->text_path.s_text = NULL;
+	data->text_path.no = NULL;
+	data->text_path.so = NULL;
+	data->text_path.ea = NULL;
+	data->text_path.we = NULL;
+	data->text_path.sp = NULL;
 	data->color.f_color = 0;
 	data->color.c_color= 0;
 	data->player.x = 0;

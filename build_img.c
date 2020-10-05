@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 19:57:10 by ltouret           #+#    #+#             */
-/*   Updated: 2020/09/21 20:20:34 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/05 13:53:28 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		fill_image(t_data *data, t_img **img)
 	if (!(*img = malloc(sizeof(t_img))))
 		return (ERR_MAL);
 	(*img)->img = mlx_new_image(data->mlx.mlx, data->mlx.mlx_wid, data->mlx.mlx_hei);
-	(*img)->addr = mlx_get_data_addr((*img)->img, &(*img)->bits_per_pixel,
+	(*img)->addr = mlx_get_data_addr((*img)->img, &(*img)->bpp,
 	&(*img)->line_length, &(*img)->endian);
 	ray(data, img);
 	return (OK);
