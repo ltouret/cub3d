@@ -31,35 +31,6 @@
 #define MAC_KEY_RIGHT 124
 #define MAC_KEY_ESC 53 // maybe not needed esc
 
-/*int worldMap[mapWidth][mapHeight]=
-{
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};*/
-
-
 void			draw_pixel(t_img **img, int x, int y, t_data *data, int color)
 {
 	char *dst;
@@ -198,7 +169,11 @@ void	ray(t_data *data, t_img **img)
       int drawEnd = lineHeight / 2 + h / 2;
       if (drawEnd >= h)drawEnd = h - 1;
 		//printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
-		draw_vert(img, x, drawStart, drawEnd, data, 0x00FF0000);
+		//int color;
+		int no_color = 0x00FF0000;
+		int so_color = 0x0000FF00;
+		int ea_color = 0x000000FF;
+		int we_color = 0x00FFFF66;
 		// TODO add color stuff here!
 	 /*color;
       switch(worldMap[mapX][mapY])
@@ -211,7 +186,15 @@ void	ray(t_data *data, t_img **img)
       }*/
 
       //give x and y sides different brightness
-      //if (side == 1) {color = color / 2;}
+      //if (side == 0 && 0.66 >= data->player.plane_x && data->player.plane_x >= -0.66 && data->player.plane_y >= 0) // y is true 
+      if (side == 0 && 1 >= rayDirY && rayDirY >= -1 &&
+		  1.2 >= rayDirX && rayDirX >= 0.657938)// && data->player.plane_y >= 0) // y is true 
+		draw_vert(img, x, drawStart, drawEnd, data, no_color);
+      //else if (side == 0 && 0.66 >= data->player.plane_x && data->player.plane_x >= -0.66 && data->player.plane_y <= 0)
+	//	draw_vert(img, x, drawStart, drawEnd, data, we_color);
+	else // y is false
+		draw_vert(img, x, drawStart, drawEnd, data, ea_color);
+		printf("x %d pX %f pY %f\n", x, rayDirX, rayDirY);
 
       //draw the pixels of the stripe as a vertical line
      // verLine(x, drawStart, drawEnd, color);
@@ -246,6 +229,7 @@ int		player_movements(t_data *data)
 		if (data->keys[MAC_KEY_A])
 			move_player_we(data, MOV_A);
 		create_image(data);
+		//printf("pX %f pY %f\n", data->player.dir_x, data->player.dir_y);
 	}
 	return (OK);
 }

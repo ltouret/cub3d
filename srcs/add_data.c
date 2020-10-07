@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 00:34:19 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/05 14:07:09 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/07 17:43:28 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ void	handle_player(t_data *data, char *map_line)
 		i++;
 	}
 }
-
-//static	int	add_text(t_data);
 
 int		load_text(t_data *data, t_text_img *text_img, char *text_path)
 {
