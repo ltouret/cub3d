@@ -7,7 +7,7 @@
 #define mapWidth 24
 #define mapHeight 24
 
-//this has to be in the Makefile
+//this has to be in the Makefile only if at 42
 #define LINUX 1
 
 // keys.h
@@ -44,40 +44,14 @@ void			draw_vert(t_img **img, int x, int y1, int y2, t_data *data, int color)
 	int i;
 
 	i = y1 - 1;
-	/*if (i > data->mlx.mlx_hei)
-		i = data->mlx.mlx_hei;
-	if (y2 < 0)
-		y2 = 0;
-	if (i < 0)
-		i = 0; 
-	if (y2 > data->mlx.mlx_hei)
-		y2 = data->mlx.mlx_hei;*/
-	//printf("x %d y1 %d y2 %d\n", x, i, y2);
 	while (++i <= y2)
-	{
-		//printf("im %d\n", i);
 		draw_pixel(img, x, i, data, color);
-	}
-}
-
-void	print_map(char **map)
-{
-	int		i;
-
-	i = 0;
-	ft_printf("Parsed map is:\n");
-	while (map[i])
-		ft_printf("%s\n", map[i++]);
 }
 
 void	ray(t_data *data, t_img **img)
 {
 	char **worldMap = data->map;
 	double posX = data->player.x, posY = data->player.y;  //x and y start position
-	//ft_printf("%d %d",(int) posY, (int)posX);
-	//double posX = 22, posY = 12;  //x and y start position
-	//double dirX = 0, dirY = 1; //initial direction vector
-	//double planeX = 0.66, planeY = 0; //the 2d raycaster version of camera plane
 
 	int x;
 	int h;
@@ -168,36 +142,26 @@ void	ray(t_data *data, t_img **img)
       if(drawStart < 0)drawStart = 0;
       int drawEnd = lineHeight / 2 + h / 2;
       if (drawEnd >= h)drawEnd = h - 1;
-		//printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
-		//int color;
-		int no_color = 0x00FF0000;
-		int so_color = 0x0000FF00;
-		int ea_color = 0x000000FF;
-		int we_color = 0x00FFFF66;
+	//printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
+	if (drawStart != 0) // ceiling
+		draw_vert(img, x, 0, drawStart, data, data->color.c_color);
+	if (drawEnd != h - 1) // floor
+		draw_vert(img, x, drawEnd, h - 1, data, data->color.f_color);
+
+		int ea_color = 0x00FF0000;
+		int we_color = 0x0000FF00;
+		int no_color = 0x000000FF;
+		int so_color = 0x00FFFF66;
 		// TODO add color stuff here!
-	 /*color;
-      switch(worldMap[mapX][mapY])
-      {
-        case 1:  color = RGB_Red;  break; //red
-        case 2:  color = RGB_Green;  break; //green
-        case 3:  color = RGB_Blue;   break; //blue
-        case 4:  color = RGB_White;  break; //white
-        default: color = RGB_Yellow; break; //yellow
-      }*/
-
-      //give x and y sides different brightness
-      //if (side == 0 && 0.66 >= data->player.plane_x && data->player.plane_x >= -0.66 && data->player.plane_y >= 0) // y is true 
-      if (side == 0 && 1 >= rayDirY && rayDirY >= -1 &&
-		  1.2 >= rayDirX && rayDirX >= 0.657938)// && data->player.plane_y >= 0) // y is true 
-		draw_vert(img, x, drawStart, drawEnd, data, no_color);
-      //else if (side == 0 && 0.66 >= data->player.plane_x && data->player.plane_x >= -0.66 && data->player.plane_y <= 0)
-	//	draw_vert(img, x, drawStart, drawEnd, data, we_color);
-	else // y is false
+	if (side == 0 && rayDirX > 0) // east
 		draw_vert(img, x, drawStart, drawEnd, data, ea_color);
-		printf("x %d pX %f pY %f\n", x, rayDirX, rayDirY);
-
-      //draw the pixels of the stripe as a vertical line
-     // verLine(x, drawStart, drawEnd, color);
+	else if (side == 0 && rayDirX < 0) // west
+		draw_vert(img, x, drawStart, drawEnd, data, we_color);
+	else if (side == 1 && rayDirY > 0) // south
+		draw_vert(img, x, drawStart, drawEnd, data, so_color);
+	else // north
+		draw_vert(img, x, drawStart, drawEnd, data, no_color);
+	//printf("x %d pX %f pY %f\n", x, rayDirX, rayDirY);
 		x++;
 	}
 }
