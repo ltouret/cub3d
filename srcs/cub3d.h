@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/05 14:07:47 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/14 00:54:05 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct		s_text_img
 	int				size;
 	int				endian;
 	void			*img;
-	char			*addr;
+	int				*addr;
 }					t_text_img;
 
 typedef struct		s_mlx //add text struc here
@@ -122,7 +122,7 @@ typedef struct		s_player
 typedef struct		s_img
 {
 	void			*img;
-	char			*addr;
+	int				*addr;
 	int				bpp;
 	int				line_length;
 	int				endian;
@@ -167,7 +167,8 @@ int		init(int argc, char **argv, t_data **data);
 void	free_data(t_data **data);
 void	print_errors(int err_code, t_data **data);
 void	ray(t_data *data, t_img **img);
-void	draw_vert(t_img **img, int x, int y1, int y2, t_data *data, int color);
+void	draw_vert(t_img **img, int x, int drawStart, t_data *data, int drawEnd, int color);
+void	draw_floor_ceil(t_data *data, t_img **img);
 double	degreeToRadians(double degree);
 int		create_image(t_data *data);
 

@@ -31,21 +31,13 @@
 #define MAC_KEY_RIGHT 124
 #define MAC_KEY_ESC 53 // maybe not needed esc
 
-void			draw_pixel(t_img **img, int x, int y, t_data *data, int color)
+void			draw_vert(t_img **img, int x, int drawStart, t_data *data, int drawEnd, int color)
 {
-	char *dst;
+	int y;
 
-    dst = (*img)->addr + (y * (*img)->line_length + x * ((*img)->bpp / 8));
-	*(unsigned int *)dst =  color;
-}
-
-void			draw_vert(t_img **img, int x, int y1, int y2, t_data *data, int color)
-{
-	int i;
-
-	i = y1 - 1;
-	while (++i <= y2)
-		draw_pixel(img, x, i, data, color);
+	y =  drawStart - 1;
+	while (++y < drawEnd)
+		(*img)->addr[y * data->mlx.mlx_wid + x] = color;
 }
 
 void	ray(t_data *data, t_img **img)
@@ -143,25 +135,32 @@ void	ray(t_data *data, t_img **img)
       int drawEnd = lineHeight / 2 + h / 2;
       if (drawEnd >= h)drawEnd = h - 1;
 	//printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
-	if (drawStart != 0) // ceiling
-		draw_vert(img, x, 0, drawStart, data, data->color.c_color);
-	if (drawEnd != h - 1) // floor
-		draw_vert(img, x, drawEnd, h - 1, data, data->color.f_color);
 
+	/*
 		int ea_color = 0x00FF0000;
 		int we_color = 0x0000FF00;
 		int no_color = 0x000000FF;
 		int so_color = 0x00FFFF66;
 		// TODO add color stuff here!
 	if (side == 0 && rayDirX > 0) // east
-		draw_vert(img, x, drawStart, drawEnd, data, ea_color);
+		draw_vert(img, x, drawStart, data, drawEnd, ea_color);
 	else if (side == 0 && rayDirX < 0) // west
-		draw_vert(img, x, drawStart, drawEnd, data, we_color);
+		draw_vert(img, x, drawStart, data, drawEnd, we_color);
 	else if (side == 1 && rayDirY > 0) // south
-		draw_vert(img, x, drawStart, drawEnd, data, so_color);
+		draw_vert(img, x, drawStart, data, drawEnd, so_color);
 	else // north
-		draw_vert(img, x, drawStart, drawEnd, data, no_color);
+		draw_vert(img, x, drawStart, data, drawEnd, no_color);
 	//printf("x %d pX %f pY %f\n", x, rayDirX, rayDirY);
+	*/
+	double wallX; //where exactly the wall was hit
+      if (side == 0) wallX = posY + perpWallDist * rayDirY;
+      else           wallX = posX + perpWallDist * rayDirX;
+      wallX -= floor((wallX));
+
+      //x coordinate on the texture
+      int texX = (int)(wallX * (double)(texWidth));
+      if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
+      if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
 		x++;
 	}
 }
