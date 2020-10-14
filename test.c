@@ -136,7 +136,7 @@ void	ray(t_data *data, t_img **img)
       if (drawEnd >= h)drawEnd = h - 1;
 	//printf("x :%d --> %d %d\n", x , drawStart, drawEnd);
 
-	/*
+	/* COLOR MODE
 		int ea_color = 0x00FF0000;
 		int we_color = 0x0000FF00;
 		int no_color = 0x000000FF;
@@ -152,15 +152,40 @@ void	ray(t_data *data, t_img **img)
 		draw_vert(img, x, drawStart, data, drawEnd, no_color);
 	//printf("x %d pX %f pY %f\n", x, rayDirX, rayDirY);
 	*/
+
+	if (side == 0 && rayDirX > 0) // east
+		data->mlx.chosen_text = &data->mlx.ea_text;
+	else if (side == 0 && rayDirX < 0) // west
+		data->mlx.chosen_text = &data->mlx.we_text;
+	else if (side == 1 && rayDirY > 0) // south
+		data->mlx.chosen_text = &data->mlx.so_text;
+	else // north
+		data->mlx.chosen_text = &data->mlx.no_text;
+
 	double wallX; //where exactly the wall was hit
       if (side == 0) wallX = posY + perpWallDist * rayDirY;
       else           wallX = posX + perpWallDist * rayDirX;
       wallX -= floor((wallX));
 
       //x coordinate on the texture
-      int texX = (int)(wallX * (double)(texWidth));
-      if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
-      if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
+      int texX = (int)(wallX * (double)(data->mlx.chosen_text->wid));
+      if(side == 0 && rayDirX > 0) texX = data->mlx.chosen_text->wid - texX - 1;
+      if(side == 1 && rayDirY < 0) texX = data->mlx.chosen_text->wid - texX - 1;
+
+	double step = 1.0 * data->mlx.chosen_text->wid / lineHeight;
+	double tex_pos = (drawStart - data->mlx.mlx_hei
+			/ 2 + lineHeight / 2) * step;
+	int y = drawStart;
+	while (y < drawEnd)
+	{
+		int tex_y = (int)tex_pos & (data->mlx.chosen_text->hei - 1);
+		tex_pos += step;
+		int color = data->mlx.chosen_text->addr[data->mlx.chosen_text->wid * tex_y + texX];
+		//if (side == 1)
+		//	color = (color >> 1) & 8355711;
+		(*img)->addr[y * data->mlx.mlx_wid + x] = color;
+		y++;
+	}
 		x++;
 	}
 }

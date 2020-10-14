@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/14 00:54:05 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/14 11:25:49 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef struct		s_mlx //add text struc here
 	t_text_img		ea_text;
 	t_text_img		we_text;
 	t_text_img		sp_text;
+	t_text_img		*chosen_text;
 }					t_mlx;
 
 typedef struct		s_text_path
