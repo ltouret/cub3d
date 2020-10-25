@@ -52,6 +52,8 @@ void	ray(t_data *data, t_img **img)
 	x = 0;
 	h = data->mlx.mlx_hei;
 	w = data->mlx.mlx_wid;
+
+	//wall casting
 	while (x < w)
 	{
 		//calculate ray position and direction
@@ -181,13 +183,27 @@ void	ray(t_data *data, t_img **img)
 		int tex_y = (int)tex_pos & (data->mlx.chosen_text->hei - 1);
 		tex_pos += step;
 		int color = data->mlx.chosen_text->addr[data->mlx.chosen_text->wid * tex_y + texX];
-		//if (side == 1)
-		//	color = (color >> 1) & 8355711;
 		(*img)->addr[y * data->mlx.mlx_wid + x] = color;
 		y++;
 	}
+		data->mlx.sp_stc.z_buffer[x] = perpWallDist;
 		x++;
 	}
+
+	// sprite casting
+	int i;
+
+	i = 0;
+	while (i < data->mlx.sp_stc.sprite_num)
+	{
+		data->mlx.sp_stc.sprite_ord[i] = i;
+		data->mlx.sp_stc.sprite_cords[i][2] = ((posX - data->mlx.sp_stc.sprite_cords[i][0])
+		* (posX - data->mlx.sp_stc.sprite_cords[i][0])
+		+ (posY - data->mlx.sp_stc.sprite_cords[i][1])
+		* (posY - data->mlx.sp_stc.sprite_cords[i][1]));
+		i++;
+	}
+	sort_sprites(data);
 }
 
 int		active_key(t_data *data)
@@ -199,6 +215,83 @@ int		active_key(t_data *data)
 		return (OK);
 	return (ERR);
 }
+
+static void swap(int* xp, int* yp) 
+{ 
+    int temp = *xp; 
+    *xp = *yp; 
+    *yp = temp; 
+} 
+  
+// Function to perform Selection Sort 
+void sort_sprites(t_data *data) 
+{ 
+    int i;
+	int j;
+	int min_idx;
+	double **arr;
+	int		*arr2;
+  
+	i = -1;
+	arr = data->mlx.sp_stc.sprite_cords;
+	arr2 = data->mlx.sp_stc.sprite_ord;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%f\n", arr[++i][2]);
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%d\n", arr2[++i]);
+	i = 0;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+	{
+		j = 0; 
+		while (j < data->mlx.sp_stc.sprite_num - i - 1)
+		{
+			if (arr[data->mlx.sp_stc.sprite_ord[j]][2]
+			> arr[data->mlx.sp_stc.sprite_ord[j + 1]][2])
+			swap(&data->mlx.sp_stc.sprite_ord[j],
+		&data->mlx.sp_stc.sprite_ord[j + 1]);
+			j++;
+		}
+		i++;
+	}
+	printf("\n");
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%f\n", arr[++i][2]);
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%d\n", arr2[++i]);
+
+	/*i = -1;
+	arr = data->mlx.sp_stc.sprite_cords;
+	arr2 = data->mlx.sp_stc.sprite_ord;
+	while (++i < data->mlx.sp_stc.sprite_num)
+		printf("%f\n", arr[i][2]);
+	i = 0;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+	{
+		min_idx = i;
+		j = i + 1;
+		while (j < data->mlx.sp_stc.sprite_num)
+		{
+			if (arr[data->mlx.sp_stc.sprite_ord[j]][2]
+			< arr[data->mlx.sp_stc.sprite_ord[min_idx]][2])
+				min_idx = j;
+			j++;
+		}
+		swap(&data->mlx.sp_stc.sprite_ord[min_idx],
+		&data->mlx.sp_stc.sprite_ord[i]);
+		i++;
+	}
+	printf("\n");
+	i = -1;
+	arr = data->mlx.sp_stc.sprite_cords;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%f\n", arr[++i][2]);
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%d\n", arr2[++i]);*/
+} 
 
 int		player_movements(t_data *data)
 {

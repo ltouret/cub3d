@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 16:08:52 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/05 13:53:11 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/17 12:19:15 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #  define M_PI 3.14159265358979323846
 # endif
 
-double	degreeToRadians(double degree)
+/*double	degreeToRadians(double degree)
 {
 	return (degree * M_PI / 180.0);
 }
@@ -32,7 +32,7 @@ void            my_mlx_pixel_put(t_img **img, int x, int y, int color)
     *(unsigned int*)dst = color;
 }
 
-/*void	ray(t_data *data, t_img **img)
+void	ray(t_data *data, t_img **img)
 {
 	int		screen_half_x = data->mlx.mlx_wid / 2;
 	int		screen_half_y = data->mlx.mlx_hei / 2;

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/05 14:05:06 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/17 12:00:40 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	init_data(t_data *data) // separate init to map - player - etc
 	data->player.rot_speed = 0.015;
 	data->player.mov_speed = 0.02;
 	data->player.radius = 5;
+	data->mlx.sp_stc.sprite_num = 0;
 }
 
 int		missing_data(t_ok_map *map)

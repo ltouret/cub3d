@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 00:34:19 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/14 00:33:01 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/17 11:57:49 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ int		add_data(t_data *data)
 	if ((ret_code = load_text(data, &data->mlx.we_text, data->text_path.we))
 		!= OK)
 		return (ret_code);
-	if ((ret_code = load_text(data, &data->mlx.sp_text, data->text_path.sp))
-		!= OK)
+	if ((ret_code = load_text(data, &data->mlx.sp_stc.sp_text,
+		data->text_path.sp)) != OK)
 		return (ret_code);
 	if ((ret_code = validate_map(data)) != OK)
 		return (ret_code);

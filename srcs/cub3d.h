@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/14 11:25:49 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/25 02:16:08 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,16 @@ typedef struct		s_text_img
 	int				*addr;
 }					t_text_img;
 
-typedef struct		s_mlx //add text struc here
+typedef struct		s_sprite
+{
+	int				sprite_num;
+	int				*sprite_ord;
+	double			**sprite_cords;
+	double			*z_buffer;
+	t_text_img		sp_text;
+}					t_sprite;
+
+typedef struct		s_mlx
 {
 	void			*mlx;
 	void			*mlx_win;
@@ -87,7 +96,7 @@ typedef struct		s_mlx //add text struc here
 	t_text_img		so_text;
 	t_text_img		ea_text;
 	t_text_img		we_text;
-	t_text_img		sp_text;
+	t_sprite		sp_stc;
 	t_text_img		*chosen_text;
 }					t_mlx;
 
@@ -164,6 +173,8 @@ int		handle_args(int argc, char **argv);
 int		validate_map(t_data *data);
 void	handle_player(t_data *data, char *map_line);
 int		add_data(t_data *data);
+void	retrieve_sprite(t_data *data, char *map_line);
+int		init_sprite(t_data *data);
 int		init(int argc, char **argv, t_data **data);
 void	free_data(t_data **data);
 void	print_errors(int err_code, t_data **data);
@@ -172,5 +183,6 @@ void	draw_vert(t_img **img, int x, int drawStart, t_data *data, int drawEnd, int
 void	draw_floor_ceil(t_data *data, t_img **img);
 double	degreeToRadians(double degree);
 int		create_image(t_data *data);
+void	sort_sprites(t_data *data);
 
 #endif

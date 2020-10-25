@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 15:24:57 by ltouret           #+#    #+#             */
-/*   Updated: 2020/08/01 03:31:12 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/17 13:14:06 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,17 +75,25 @@ static int	check_cloture(char **map, int x, int y)
 	return (OK);
 }
 
-static void	map_len(t_data *data)
+static int	map_len(t_data *data)
 {
 	data->map_width = ft_strlen(data->map[0]);
+	// call func that mallocs sprite struct here
+	// if malloc fails return ERR_MAL
+	if (init_sprite(data) == ERR_MAL)
+		return (ERR_MAL);
+	data->mlx.sp_stc.sprite_num = 0;
 	while (data->map[data->map_height])
 	{
 		handle_player(data, data->map[data->map_height]);
+		// call func that get sprites here
+		retrieve_sprite(data, data->map[data->map_height]);
 		data->map_height++;
 	}
+	return (OK);
 }
 
-int		validate_map(t_data *data)
+int			validate_map(t_data *data)
 {
 	int		x;
 	int		y;
@@ -102,11 +110,14 @@ int		validate_map(t_data *data)
 			{
 				if (check_cloture(data->map, x, y) == ERR_INV_MAP)
 					return (ERR_INV_MAP);
+				if (data->map[y][x] == '2')
+					data->mlx.sp_stc.sprite_num++;
 			}
 			x++;
 		}
 		y++;
 	}
-	map_len(data);
+	if (map_len(data) == ERR_MAL)
+		return (ERR_MAL);
 	return (OK);
 }
