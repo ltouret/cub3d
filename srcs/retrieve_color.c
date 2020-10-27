@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 18:07:27 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/29 20:31:39 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/27 23:19:12 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static int		cast_color(char **tab, int *data_color, int *map_bool)
 		if (ft_atoi(tab[i]) > 255 && free_tab(tab, 3))
 			return (ERR_INV_COLOR);
 	}
-	*data_color = ((atoi(tab[0]) << 16) + (atoi(tab[1]) << 8) +
-		atoi(tab[2]));
+	*data_color = ((ft_atoi(tab[0]) << 16) + (ft_atoi(tab[1]) << 8) +
+		ft_atoi(tab[2]));
 	free_tab(tab, 3);
 	*map_bool = 1;
 	return (OK);

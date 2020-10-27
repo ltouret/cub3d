@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 18:09:33 by ltouret           #+#    #+#             */
-/*   Updated: 2020/09/22 11:42:12 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/27 23:40:48 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,15 @@ int				get_reso(int *map_res, char *line, t_data *data)
 	i = 1;
 	while (line[i] == ' ')
 		i++;
-	data->mlx.mlx_wid = ft_atoi(line + i);
+	data->mlx.mlx_wid = ft_atol(line + i);
 	i += num_len(data->mlx.mlx_wid);
 	while (line[i] == ' ')
 		i++;
-	data->mlx.mlx_hei = ft_atoi(line + i);
-	if (max_reso(data) == ERR_RES)
-		return (ERR_RES);
+	data->mlx.mlx_hei = ft_atol(line + i);
 	i += num_len(data->mlx.mlx_hei);
 	if (!(line[i] == '\0' && data->mlx.mlx_hei > 0 && data->mlx.mlx_wid > 0))
 		return (ERR_RES);
+	max_reso(data);
 	*map_res = 1;
 	return (OK);
 }

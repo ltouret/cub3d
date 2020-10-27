@@ -6,13 +6,12 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 19:57:10 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/14 00:57:00 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/27 23:41:40 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "srcs/cub3d.h"
 #include "mlx.h"
-#include <stdio.h>
 #include <math.h>
 
 void	draw_floor_ceil(t_data *data, t_img **img) // get his bs out of here

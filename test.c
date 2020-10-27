@@ -178,6 +178,7 @@ void	ray(t_data *data, t_img **img)
 	double tex_pos = (drawStart - data->mlx.mlx_hei
 			/ 2 + lineHeight / 2) * step;
 	int y = drawStart;
+	data->mlx.sp_stc.z_buffer[x] = perpWallDist;
 	while (y < drawEnd)
 	{
 		int tex_y = (int)tex_pos & (data->mlx.chosen_text->hei - 1);
@@ -186,7 +187,6 @@ void	ray(t_data *data, t_img **img)
 		(*img)->addr[y * data->mlx.mlx_wid + x] = color;
 		y++;
 	}
-		data->mlx.sp_stc.z_buffer[x] = perpWallDist;
 		x++;
 	}
 
@@ -203,7 +203,68 @@ void	ray(t_data *data, t_img **img)
 		* (posY - data->mlx.sp_stc.sprite_cords[i][1]));
 		i++;
 	}
+
 	sort_sprites(data);
+	i = 0;
+	while (i < data->mlx.sp_stc.sprite_num)
+	{
+		//translate sprite position to relative to camera
+      double spriteX = data->mlx.sp_stc.sprite_cords[data->mlx.sp_stc.sprite_ord[i]][0] - posX;
+      double spriteY = data->mlx.sp_stc.sprite_cords[data->mlx.sp_stc.sprite_ord[i]][1] - posY;
+
+      //transform sprite with the inverse camera matrix
+      // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
+      // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
+      // [ planeY   dirY ]                                          [ -planeY  planeX ]
+
+      double invDet = 1.0 / (data->player.plane_x * data->player.dir_y - data->player.dir_x * data->player.plane_y); //required for correct matrix multiplication
+
+      double transformX = invDet * (data->player.dir_y * spriteX - data->player.dir_x * spriteY);
+      double transformY = invDet * (-data->player.plane_y * spriteX + data->player.plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D
+
+      int spriteScreenX = (int)((w / 2) * (1 + transformX / transformY));
+
+	  #define uDiv 1
+      #define vDiv 1
+      #define vMove 0.0
+      int vMoveScreen = (int)(vMove / transformY);
+
+      //calculate height of the sprite on screen
+      int spriteHeight = abs((int)(h / (transformY))) / vDiv; //using 'transformY' instead of the real distance prevents fisheye
+      //calculate lowest and highest pixel to fill in current stripe
+      int drawStartY = -spriteHeight / 2 + h / 2 + vMoveScreen;
+      if(drawStartY < 0) drawStartY = 0;
+      int drawEndY = spriteHeight / 2 + h / 2 + vMoveScreen;
+      if(drawEndY >= h) drawEndY = h - 1;
+
+      //calculate width of the sprite
+      int spriteWidth = abs( (int) (h / (transformY))) / uDiv;
+      int drawStartX = -spriteWidth / 2 + spriteScreenX;
+      if(drawStartX < 0) drawStartX = 0;
+      int drawEndX = spriteWidth / 2 + spriteScreenX;
+      if(drawEndX >= w) drawEndX = w - 1;
+
+	  int stripe = drawStartX;
+	  while (stripe < drawEndX)
+	  {
+		int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * data->mlx.sp_stc.sp_text.wid / spriteWidth) / 256;
+		if(transformY > 0 && stripe > 0 && stripe < w && transformY < data->mlx.sp_stc.z_buffer[stripe])
+		{
+			int y = drawStartY;
+			while (y < drawEndY)
+			{
+				int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+          		int texY = ((d * data->mlx.sp_stc.sp_text.hei) / spriteHeight) / 256;
+				int color = data->mlx.sp_stc.sp_text.addr[data->mlx.sp_stc.sp_text.wid * texY + texX];
+				if ((color & 0x00FFFFFF) != 0)
+					(*img)->addr[y * data->mlx.mlx_wid + stripe] = color;
+				y++;
+			}
+		}
+		stripe++;
+	  }
+	  i++;
+	}
 }
 
 int		active_key(t_data *data)
@@ -225,7 +286,48 @@ static void swap(int* xp, int* yp)
   
 // Function to perform Selection Sort 
 void sort_sprites(t_data *data) 
-{ 
+{
+	/*int is_done;
+	int i;
+	int tmp;
+	double **arr;
+	int		*arr2;
+  
+	arr = data->mlx.sp_stc.sprite_cords;
+	arr2 = data->mlx.sp_stc.sprite_ord;
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%f\n", arr[++i][2]);
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%d\n", arr2[++i]);
+	is_done = 0;
+	i = 0;
+	while (!is_done)
+	{
+		is_done = 1;
+		i = 0;
+		while (i < (data->mlx.sp_stc.sprite_num - 1))
+		{
+			if (arr[data->mlx.sp_stc.sprite_ord[i]][2]
+				< arr[data->mlx.sp_stc.sprite_ord[i + 1]][2])
+			{
+				//swap(&data->mlx.sp_stc.sprite_ord[i],
+				//	&data->mlx.sp_stc.sprite_ord[i + 1]);
+				is_done = 0;
+			}
+			i++;
+		}
+	}
+	printf("\n");
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%d\n", arr2[++i]);
+	i = -1;
+	while (i < data->mlx.sp_stc.sprite_num - 1)
+		printf("%f\n", arr[++i][2]);
+	*/
+	
     int i;
 	int j;
 	int min_idx;
@@ -235,11 +337,11 @@ void sort_sprites(t_data *data)
 	i = -1;
 	arr = data->mlx.sp_stc.sprite_cords;
 	arr2 = data->mlx.sp_stc.sprite_ord;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%f\n", arr[++i][2]);
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%d\n", arr2[++i]);
+	//while (i < data->mlx.sp_stc.sprite_num - 1)
+	//	printf("%f\n", arr[++i][2]);
+	//i = -1;
+	//while (i < data->mlx.sp_stc.sprite_num - 1)
+	//	printf("%d\n", arr2[++i]);
 	i = 0;
 	while (i < data->mlx.sp_stc.sprite_num - 1)
 	{
@@ -247,22 +349,23 @@ void sort_sprites(t_data *data)
 		while (j < data->mlx.sp_stc.sprite_num - i - 1)
 		{
 			if (arr[data->mlx.sp_stc.sprite_ord[j]][2]
-			> arr[data->mlx.sp_stc.sprite_ord[j + 1]][2])
+			< arr[data->mlx.sp_stc.sprite_ord[j + 1]][2])
 			swap(&data->mlx.sp_stc.sprite_ord[j],
 		&data->mlx.sp_stc.sprite_ord[j + 1]);
 			j++;
 		}
 		i++;
 	}
-	printf("\n");
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%f\n", arr[++i][2]);
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%d\n", arr2[++i]);
+	//printf("\n");
+	//i = -1;
+	//while (i < data->mlx.sp_stc.sprite_num - 1)
+	//	printf("%f\n", arr[++i][2]);
+	//i = -1;
+	//while (i < data->mlx.sp_stc.sprite_num - 1)
+	//	printf("%d\n", arr2[++i]);
 
-	/*i = -1;
+	/*
+	i = -1;
 	arr = data->mlx.sp_stc.sprite_cords;
 	arr2 = data->mlx.sp_stc.sprite_ord;
 	while (++i < data->mlx.sp_stc.sprite_num)
@@ -290,8 +393,9 @@ void sort_sprites(t_data *data)
 		printf("%f\n", arr[++i][2]);
 	i = -1;
 	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%d\n", arr2[++i]);*/
-} 
+		printf("%d\n", arr2[++i]);
+	*/
+}
 
 int		player_movements(t_data *data)
 {

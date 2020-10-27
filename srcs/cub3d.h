@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/25 02:16:08 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/27 23:13:33 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ typedef struct		s_mlx
 {
 	void			*mlx;
 	void			*mlx_win;
-	int				mlx_wid;
-	int				mlx_hei;
+	long			mlx_wid;
+	long			mlx_hei;
 	t_text_img		no_text;
 	t_text_img		so_text;
 	t_text_img		ea_text;

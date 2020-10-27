@@ -6,12 +6,11 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/17 13:13:08 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/17 13:28:40 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/27 23:41:00 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include <stdio.h>
 
 // TODO create free func even if sprite_num == 0 needs to free sprite_ord && sprite_cords
 
