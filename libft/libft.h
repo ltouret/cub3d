@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 08:03:48 by ltouret           #+#    #+#             */
-/*   Updated: 2020/06/18 22:03:31 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/27 23:24:08 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct		s_list
 int					ft_printf(const char *str, ...);
 int					get_next_line(int fd, char **line);
 int					ft_atoi(const char *str);
+long				ft_atol(const char *str);
 int					ft_find(char *str, int c);
 void				ft_bzero(void *s, size_t n);
 void				*ft_calloc(size_t count, size_t size);
