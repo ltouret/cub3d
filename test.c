@@ -248,63 +248,14 @@ static void swap(int* xp, int* yp)
     *yp = temp; 
 } 
   
-void sort_sprites(t_data *data) 
+void	sort_sprites(t_data *data) 
 {
-	/*int is_done;
-	int i;
-	int tmp;
-	double **arr;
-	int		*arr2;
-  
-	arr = data->mlx.sp_stc.sprite_cords;
-	arr2 = data->mlx.sp_stc.sprite_ord;
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%f\n", arr[++i][2]);
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%d\n", arr2[++i]);
-	is_done = 0;
-	i = 0;
-	while (!is_done)
-	{
-		is_done = 1;
-		i = 0;
-		while (i < (data->mlx.sp_stc.sprite_num - 1))
-		{
-			if (arr[data->mlx.sp_stc.sprite_ord[i]][2]
-				< arr[data->mlx.sp_stc.sprite_ord[i + 1]][2])
-			{
-				//swap(&data->mlx.sp_stc.sprite_ord[i],
-				//	&data->mlx.sp_stc.sprite_ord[i + 1]);
-				is_done = 0;
-			}
-			i++;
-		}
-	}
-	printf("\n");
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%d\n", arr2[++i]);
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%f\n", arr[++i][2]);
-	*/
-	
     int i;
 	int j;
 	int min_idx;
 	double **arr;
-	int		*arr2;
   
-	i = -1;
 	arr = data->mlx.sp_stc.sprite_cords;
-	arr2 = data->mlx.sp_stc.sprite_ord;
-	//while (i < data->mlx.sp_stc.sprite_num - 1)
-	//	printf("%f\n", arr[++i][2]);
-	//i = -1;
-	//while (i < data->mlx.sp_stc.sprite_num - 1)
-	//	printf("%d\n", arr2[++i]);
 	i = 0;
 	while (i < data->mlx.sp_stc.sprite_num - 1)
 	{
@@ -319,45 +270,6 @@ void sort_sprites(t_data *data)
 		}
 		i++;
 	}
-	//printf("\n");
-	//i = -1;
-	//while (i < data->mlx.sp_stc.sprite_num - 1)
-	//	printf("%f\n", arr[++i][2]);
-	//i = -1;
-	//while (i < data->mlx.sp_stc.sprite_num - 1)
-	//	printf("%d\n", arr2[++i]);
-
-	/*
-	i = -1;
-	arr = data->mlx.sp_stc.sprite_cords;
-	arr2 = data->mlx.sp_stc.sprite_ord;
-	while (++i < data->mlx.sp_stc.sprite_num)
-		printf("%f\n", arr[i][2]);
-	i = 0;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-	{
-		min_idx = i;
-		j = i + 1;
-		while (j < data->mlx.sp_stc.sprite_num)
-		{
-			if (arr[data->mlx.sp_stc.sprite_ord[j]][2]
-			< arr[data->mlx.sp_stc.sprite_ord[min_idx]][2])
-				min_idx = j;
-			j++;
-		}
-		swap(&data->mlx.sp_stc.sprite_ord[min_idx],
-		&data->mlx.sp_stc.sprite_ord[i]);
-		i++;
-	}
-	printf("\n");
-	i = -1;
-	arr = data->mlx.sp_stc.sprite_cords;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%f\n", arr[++i][2]);
-	i = -1;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-		printf("%d\n", arr2[++i]);
-	*/
 }
 
 int		main(int argc, char **argv)

@@ -6,17 +6,14 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 12:55:42 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 13:08:37 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 13:14:32 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "srcs/cub3d.h"
 #include "mlx.h"
 #include "keys.h"
-#include "bmp.h"
 #include "player_mov.h"
-#include <stdio.h>
-#include <math.h>
 
 //TODO erase this
 //this has to be in the Makefile only if at 42
@@ -53,15 +50,6 @@ static int		linux_mac_keycode(int *keycode)
 	return (OK);
 }
 
-/*void	show_key(t_data *data)
-{
-	int i = -1;
-	while (++i < 280)
-	{
-		ft_printf("i %d act_key %d\n", i, data->keys[i]);
-	}
-}*/
-
 int				player_movements(t_data *data)
 {
 	if (active_key(data))
@@ -79,34 +67,24 @@ int				player_movements(t_data *data)
 		if (data->keys[MAC_KEY_A])
 			move_player_we(data, MOV_A);
 		create_image(data);
-		//printf("pX %f pY %f\n", data->player.dir_x, data->player.dir_y);
 	}
 	return (OK);
 }
 
 int				keypress(int keycode, t_data *data)
 {
-	//if (keycode == 65307); // exit program
-	//ft_printf("pressed ");
-	//ft_printf("LIN key is: %d\n", keycode);
 	if (LINUX)
 		linux_mac_keycode(&keycode);
 	if (keycode < 280)
 		data->keys[keycode] = 1;
-	//show_key(data);
-	//ft_printf("MAC key is: %d\n", keycode);
 	return (OK);
 }
 
 int				keyrelease(int keycode, t_data *data)
 {
-	//ft_printf("unpressed ");
-	//ft_printf("LIN key is: %d\n", keycode);
 	if (LINUX)
 		linux_mac_keycode(&keycode);
 	if (keycode < 280)
 		data->keys[keycode] = 0;
-	//show_key(data);
-	//ft_printf("MAC key is: %d\n", keycode);
 	return (OK);
 }
