@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 13:05:39 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 13:12:30 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 19:25:30 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define LIN_KEY_LEFT 65361
 # define LIN_KEY_DOWN 65364
 # define LIN_KEY_RIGHT 65363
-# define LIN_KEY_ESC 65307 // maybe not needed esc
+# define LIN_KEY_ESC 65307
 
 # define MAC_KEY_W 13
 # define MAC_KEY_A 0
@@ -31,6 +31,6 @@
 # define MAC_KEY_LEFT 123
 # define MAC_KEY_DOWN 125
 # define MAC_KEY_RIGHT 124
-# define MAC_KEY_ESC 53 // maybe not needed esc
+# define MAC_KEY_ESC 53
 
 #endif

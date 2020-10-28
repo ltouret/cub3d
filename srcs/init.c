@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/17 12:00:40 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 19:56:17 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	init_data(t_data *data) // separate init to map - player - etc
 	data->text_path.we = NULL;
 	data->text_path.sp = NULL;
 	data->color.f_color = 0;
-	data->color.c_color= 0;
+	data->color.c_color = 0;
 	data->player.x = 0;
 	data->player.y = 0;
 	data->player.ori = 0;
@@ -95,7 +95,6 @@ int		handle_args(int argc, char **argv)
 	return (OK);
 }
 
-//TODO remove printfs, and create func that prints error msgs!
 int		init(int argc, char **argv, t_data **data)
 {
 	t_ok_map	map;

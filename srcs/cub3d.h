@@ -6,14 +6,13 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 13:02:15 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 19:48:32 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include <fcntl.h> // include only in file that needs this shit -- open 
 # include "libft.h"
 # include "mlx.h"
 
@@ -178,7 +177,7 @@ void	retrieve_sprite(t_data *data, char *map_line);
 int		init_sprite(t_data *data);
 int		init(int argc, char **argv, t_data **data);
 void	free_data(t_data **data);
-void	print_errors(int err_code, t_data **data);
+void	print_errors(int err_code);
 void	ray(t_data *data, t_img **img);
 void	draw_vert(t_img **img, int x, int drawStart, t_data *data, int drawEnd, int color);
 void	draw_floor_ceil(t_data *data, t_img **img);
@@ -189,5 +188,6 @@ int		keyrelease(int keycode, t_data *data);
 int		keypress(int keycode, t_data *data);
 int		player_movements(t_data *data);
 void	sort_sprites(t_data *data);
+int		exit_pro(void);
 
 #endif

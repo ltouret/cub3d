@@ -6,26 +6,11 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/23 23:31:52 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 12:34:59 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 19:46:12 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	free_data(t_data **data)
-{
-	if (*data == NULL)
-		return ;
-	free((*data)->text_path.no);
-	free((*data)->text_path.we);
-	free((*data)->text_path.ea);
-	free((*data)->text_path.so);
-	free((*data)->text_path.sp);
-	//mlx_destroy_window((*data)->mlx.mlx, (*data)->mlx.mlx_win); // check if this is needed
-	free_tab((*data)->map, 0);
-	free(*data);
-	*data = NULL;
-}
 
 static void	error_msgs2(char *err[100])
 {
@@ -49,8 +34,6 @@ static void	error_msgs2(char *err[100])
 	err[53] = "Cant write BMP";
 }
 
-// TODO change err tab to real number cuz i created with one 100 error msgs
-//		not the real number!
 static void	error_msgs(int err_code, char *err[100])
 {
 	int		i;
@@ -75,10 +58,9 @@ static void	error_msgs(int err_code, char *err[100])
 	}
 	else
 		error_msgs2(err);
-	//err[] = "";
 }
 
-void		print_errors(int err_code, t_data **data)
+void		print_errors(int err_code)
 {
 	char	*err[100];
 
@@ -88,6 +70,5 @@ void		print_errors(int err_code, t_data **data)
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd(err[err_code], 2);
 	ft_putstr_fd("\n", 2);
-	free_data(data);
-	exit(-1);
+	exit_pro();
 }

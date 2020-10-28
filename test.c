@@ -16,7 +16,6 @@ void			draw_vert(t_img **img, int x, int drawStart, t_data *data, int drawEnd, i
 
 void	ray(t_data *data, t_img **img)
 {
-	char **worldMap = data->map;
 	double posX = data->player.x, posY = data->player.y;  //x and y start position
 
 	int x;
@@ -46,8 +45,6 @@ void	ray(t_data *data, t_img **img)
 		 //length of ray from one x or y-side to next x or y-side
 		double deltaDistX = (rayDirY == 0) ? 0 : ((rayDirX == 0) ? 1 : fabs(1 / rayDirX));
 		double deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : fabs(1 / rayDirY));
-		//double deltaDistX = fabs(1 / rayDirX);
-		//double deltaDistY = fabs(1 / rayDirY); 
 		//printf("x is : %d ray: %f %f, delta %f %f\n",x, rayDirX, rayDirY, deltaDistX, deltaDistY);
 		double perpWallDist;
 		
@@ -241,67 +238,30 @@ void	ray(t_data *data, t_img **img)
 	}
 }
 
-static void swap(int* xp, int* yp) 
-{ 
-    int temp = *xp; 
-    *xp = *yp; 
-    *yp = temp; 
-} 
-  
-void	sort_sprites(t_data *data) 
-{
-    int i;
-	int j;
-	int min_idx;
-	double **arr;
-  
-	arr = data->mlx.sp_stc.sprite_cords;
-	i = 0;
-	while (i < data->mlx.sp_stc.sprite_num - 1)
-	{
-		j = 0; 
-		while (j < data->mlx.sp_stc.sprite_num - i - 1)
-		{
-			if (arr[data->mlx.sp_stc.sprite_ord[j]][2]
-			< arr[data->mlx.sp_stc.sprite_ord[j + 1]][2])
-			swap(&data->mlx.sp_stc.sprite_ord[j],
-		&data->mlx.sp_stc.sprite_ord[j + 1]);
-			j++;
-		}
-		i++;
-	}
-}
-
 int		main(int argc, char **argv)
 {
 	int		ret_code;
 	t_data	*data;
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
-		print_errors(ret_code, &data);
+		print_errors(ret_code);
 	if (argc == 3)
 	{
 		if ((ret_code = save_bmp(data)) != OK)
-			print_errors(ret_code, &data);
-		// call exit here
-		printf("bmp\n");
+			print_errors(ret_code);
+		exit_pro();
 	}
 	else
 	{
 		if (!(data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid,
 			data->mlx.mlx_hei, "Cub3d")))
-			print_errors(ERR_MLX_INIT, &data);
+			print_errors(ERR_MLX_INIT);
 		mlx_mouse_hide(data->mlx.mlx, data->mlx.mlx_win);
-		// add hook of keypress here
 		mlx_hook(data->mlx.mlx_win, 2, 1L<<0, keypress, data);
 		mlx_hook(data->mlx.mlx_win, 3, 1L<<1, keyrelease, data);
-		//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit with esc & free
-		// till here
-
+		mlx_hook(data->mlx.mlx_win, 17, 1L<<17, exit_pro, data);
 		create_image(data);
 		mlx_loop_hook(data->mlx.mlx, player_movements, data);
 		mlx_loop(data->mlx.mlx);
-		free_data(&data);
-		ft_printf("DONE\n");
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 12:55:42 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 13:14:32 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 19:25:00 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ static int		linux_mac_keycode(int *keycode)
 		*keycode = MAC_KEY_LEFT;
 	else if (*keycode == LIN_KEY_RIGHT)
 		*keycode = MAC_KEY_RIGHT;
+	else if (*keycode == LIN_KEY_ESC)
+		*keycode = MAC_KEY_ESC;
 	return (OK);
 }
 
@@ -75,6 +77,8 @@ int				keypress(int keycode, t_data *data)
 {
 	if (LINUX)
 		linux_mac_keycode(&keycode);
+	if (keycode == MAC_KEY_ESC)
+		exit_pro();
 	if (keycode < 280)
 		data->keys[keycode] = 1;
 	return (OK);

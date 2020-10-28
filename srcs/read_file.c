@@ -6,11 +6,12 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 15:36:49 by ltouret           #+#    #+#             */
-/*   Updated: 2020/07/10 23:52:39 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 19:48:32 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include <fcntl.h>
 
 int		read_file(int fd, t_ok_map *map, t_data *data)
 {
