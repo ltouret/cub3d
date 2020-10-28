@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 12:21:07 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 12:33:19 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 13:27:49 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int				save_bmp(t_data *data)
 
 	if ((ret_code = fill_image(data, &img)) != OK)
 		return (ret_code);
-	if ((file = open("save.bmp", O_CREAT | O_RDWR | O_TRUNC, 0666)))
+	if (!(file = open("save.bmp", O_CREAT | O_RDWR | O_TRUNC, 0666)))
 		return (ERR_WRI_BMP);
 	write_file(file, img, data);
 	close(file);
