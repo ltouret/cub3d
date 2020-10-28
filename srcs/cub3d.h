@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 12:19:45 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 13:02:15 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,10 @@ void	draw_vert(t_img **img, int x, int drawStart, t_data *data, int drawEnd, int
 void	draw_floor_ceil(t_data *data, t_img **img);
 double	degreeToRadians(double degree);
 int		create_image(t_data *data);
+int		fill_image(t_data *data, t_img **img);
+int		keyrelease(int keycode, t_data *data);
+int		keypress(int keycode, t_data *data);
+int		player_movements(t_data *data);
 void	sort_sprites(t_data *data);
 
 #endif
