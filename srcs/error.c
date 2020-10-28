@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/23 23:31:52 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/05 14:11:13 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/10/28 12:34:59 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static void	error_msgs2(char *err[100])
 	err[49] = "Missing player in map";
 	err[51] = "Initializing mlx";
 	err[52] = "Error mlx";
+	err[53] = "Cant write BMP";
 }
 
 // TODO change err tab to real number cuz i created with one 100 error msgs

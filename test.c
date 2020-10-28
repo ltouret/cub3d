@@ -476,8 +476,6 @@ int		keyrelease(int keycode, t_data *data)
 	return (OK);
 }
 
-//int		load_text(it_data *data, )
-
 int		main(int argc, char **argv)
 {
 	int		ret_code;
@@ -485,20 +483,29 @@ int		main(int argc, char **argv)
 
 	if ((ret_code = init(argc, argv, &data)) != OK)
 		print_errors(ret_code, &data);
-	if (!(data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid,
-		data->mlx.mlx_hei, "Cub3d")))
-		print_errors(ERR_MLX_INIT, &data);
-	mlx_mouse_hide(data->mlx.mlx, data->mlx.mlx_win);
-	// add hook of keypress here
-	//load_text(data);
-	mlx_hook(data->mlx.mlx_win, 2, 1L<<0, keypress, data);
-	mlx_hook(data->mlx.mlx_win, 3, 1L<<1, keyrelease, data);
-	//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit with esc & free
-	// till here
+	if (argc == 3)
+	{
+		if ((ret_code = save_bmp(data)) != OK)
+			print_errors(ret_code, &data);
+		// call exit here
+		printf("bmp\n");
+	}
+	else
+	{
+		if (!(data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, data->mlx.mlx_wid,
+			data->mlx.mlx_hei, "Cub3d")))
+			print_errors(ERR_MLX_INIT, &data);
+		mlx_mouse_hide(data->mlx.mlx, data->mlx.mlx_win);
+		// add hook of keypress here
+		mlx_hook(data->mlx.mlx_win, 2, 1L<<0, keypress, data);
+		mlx_hook(data->mlx.mlx_win, 3, 1L<<1, keyrelease, data);
+		//mlx_hook(data->mlx.mlx_win, 3, 1L<<1, clp, data); //exit with esc & free
+		// till here
 
-	create_image(data);
-	mlx_loop_hook(data->mlx.mlx, player_movements, data);
-	mlx_loop(data->mlx.mlx);
-	free_data(&data);
-	ft_printf("DONE\n");
+		create_image(data);
+		mlx_loop_hook(data->mlx.mlx, player_movements, data);
+		mlx_loop(data->mlx.mlx);
+		free_data(&data);
+		ft_printf("DONE\n");
+	}
 }
