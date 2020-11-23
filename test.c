@@ -19,8 +19,8 @@ void	ray(t_data *data, t_img **img)
 	//double posX = data->player.x, posY = data->player.y;  //x and y start position
 
 	int		x;
-	int		map_x;
-	int		map_y;
+	int		map_cords[2];
+	double	ray_dirs[2];
 	double	camera_x;
 
 	x = 0;
@@ -30,11 +30,13 @@ void	ray(t_data *data, t_img **img)
 	{
 		//calculate ray position and direction
 		camera_x = 2 * x / (double)data->mlx.mlx_wid - 1; //x-coordinate in camera space
-		double rayDirX = data->player.dir_x + data->player.plane_x * camera_x;
-		double rayDirY = data->player.dir_y + data->player.plane_y * camera_x;
+		ray_dirs[0] = data->player.dir_x + data->player.plane_x * camera_x;
+		ray_dirs[1] = data->player.dir_y + data->player.plane_y * camera_x;
+		//double rayDirX = data->player.dir_x + data->player.plane_x * camera_x;
+		//double rayDirY = data->player.dir_y + data->player.plane_y * camera_x;
 
-		map_x = (int)data->player.x;
-		map_y = (int)data->player.y;
+		map_cords[0] = (int)data->player.x;
+		map_cords[1] = (int)data->player.y;
 
 		//length of ray from current position to next x or y-side
 		double sideDistX;
@@ -50,25 +52,25 @@ void	ray(t_data *data, t_img **img)
 		//int hit = 0; //was there a wall hit?
 		int side; //was a NS or a EW wall hit?
 
-		if (rayDirX < 0)
+		if (ray_dirs[0] < 0)
 		{
 		  stepX = -1;
-		  sideDistX = (data->player.x - map_x) * (fabs(1 / rayDirX));
+		  sideDistX = (data->player.x - map_cords[0]) * (fabs(1 / ray_dirs[0]));
 		}
 		else
 		{
 		  stepX = 1;
-		  sideDistX = (map_x + 1.0 - data->player.x) * (fabs(1 / rayDirX));
+		  sideDistX = (map_cords[0] + 1.0 - data->player.x) * (fabs(1 / ray_dirs[0]));
 		}
-		if (rayDirY < 0)
+		if (ray_dirs[1] < 0)
 		{
 		  stepY = -1;
-		  sideDistY = (data->player.y - map_y) * (fabs(1 / rayDirY));
+		  sideDistY = (data->player.y - map_cords[1]) * (fabs(1 / ray_dirs[1]));
 		}
 		else
 		{
 		  stepY = 1;
-		  sideDistY = (map_y + 1.0 - data->player.y) * (fabs(1 / rayDirY));
+		  sideDistY = (map_cords[1] + 1.0 - data->player.y) * (fabs(1 / ray_dirs[1]));
 		}
 
 		//perform DDA
@@ -77,25 +79,25 @@ void	ray(t_data *data, t_img **img)
 		  //jump to next map square, OR in x-direction, OR in y-direction
 		  if (sideDistX < sideDistY)
 		  {
-		    sideDistX += (fabs(1 / rayDirX));
-		    map_x += stepX;
+		    sideDistX += (fabs(1 / ray_dirs[0]));
+		    map_cords[0] += stepX;
 		    side = 0;
 		  }
 		  else
 		  {
-		    sideDistY +=  (fabs(1 / rayDirY));
-		    map_y += stepY;
+		    sideDistY +=  (fabs(1 / ray_dirs[1]));
+		    map_cords[1] += stepY;
 		    side = 1;
 		  }
 		  //Check if ray has hit a wall
-		   if (data->map[map_y][map_x] == '1')
+		   if (data->map[map_cords[1]][map_cords[0]] == '1')
 			   break;
 				//hit = 1;
 		} 
 		if (side == 0)
-			perpWallDist = (map_x - data->player.x + (1 - stepX) / 2) / rayDirX;
+			perpWallDist = (map_cords[0] - data->player.x + (1 - stepX) / 2) / ray_dirs[0];
       else
-		  perpWallDist = (map_y - data->player.y + (1 - stepY) / 2) / rayDirY;
+		  perpWallDist = (map_cords[1] - data->player.y + (1 - stepY) / 2) / ray_dirs[1];
 
 		int lineHeight = (int)(data->mlx.mlx_hei / perpWallDist);
 
@@ -107,27 +109,27 @@ void	ray(t_data *data, t_img **img)
       if (drawEnd >= data->mlx.mlx_hei)
 		  drawEnd = data->mlx.mlx_hei - 1;
 
-	if (side == 0 && rayDirX > 0) // east
+	if (side == 0 && ray_dirs[0] > 0) // east
 		data->mlx.chosen_text = &data->mlx.ea_text;
-	else if (side == 0 && rayDirX < 0) // west
+	else if (side == 0 && ray_dirs[0] < 0) // west
 		data->mlx.chosen_text = &data->mlx.we_text;
-	else if (side == 1 && rayDirY > 0) // south
+	else if (side == 1 && ray_dirs[1] > 0) // south
 		data->mlx.chosen_text = &data->mlx.so_text;
 	else // north
 		data->mlx.chosen_text = &data->mlx.no_text;
 
 	double wallX; //where exactly the wall was hit
       if (side == 0)
-		  wallX = data->player.y + perpWallDist * rayDirY;
+		  wallX = data->player.y + perpWallDist * ray_dirs[1];
       else
-		  wallX = data->player.x + perpWallDist * rayDirX;
+		  wallX = data->player.x + perpWallDist * ray_dirs[0];
       wallX -= floor((wallX));
 
       //x coordinate on the texture
       int texX = (int)(wallX * (double)(data->mlx.chosen_text->wid));
-      if(side == 0 && rayDirX > 0)
+      if(side == 0 && ray_dirs[0] > 0)
 		  texX = data->mlx.chosen_text->wid - texX - 1;
-      if(side == 1 && rayDirY < 0)
+      if(side == 1 && ray_dirs[1] < 0)
 		  texX = data->mlx.chosen_text->wid - texX - 1;
 
 	//double step = 1.0 * data->mlx.chosen_text->wid / lineHeight;
