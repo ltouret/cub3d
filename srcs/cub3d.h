@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 19:48:32 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/25 01:33:22 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,11 @@ typedef struct		s_mlx
 	t_text_img		we_text;
 	t_sprite		sp_stc;
 	t_text_img		*chosen_text;
+	int				map_cords[2];
+	int				steps[2];
+	double			side_dists[2];
+	double			ray_dirs[2];
+	int				draw[2];
 }					t_mlx;
 
 typedef struct		s_text_path
@@ -189,5 +194,12 @@ int		keypress(int keycode, t_data *data);
 int		player_movements(t_data *data);
 void	sort_sprites(t_data *data);
 int		exit_pro(void);
+
+//beta
+
+void	wall_casting(t_data *data);
+void	wall_casting2(t_data *data, int *side);
+void	wall_casting3(t_data *data, int side, double *perpWallDist); //maybe use int *side
+void	wall_casting4(t_data *data, int side, double perpWallDist, int x, t_img **img); //maybe use int *side
 
 #endif

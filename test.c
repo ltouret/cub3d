@@ -19,134 +19,22 @@ void	ray(t_data *data, t_img **img)
 	//double posX = data->player.x, posY = data->player.y;  //x and y start position
 
 	int		x;
-	int		map_cords[2];
-	double	ray_dirs[2];
-	double	camera_x;
-
-	x = 0;
+	int		side; //was a NS or a EW wall hit?
+	double	perpWallDist;
 
 	//wall casting
+	x = 0;
 	while (x < data->mlx.mlx_wid)
 	{
-		//calculate ray position and direction
-		camera_x = 2 * x / (double)data->mlx.mlx_wid - 1; //x-coordinate in camera space
-		ray_dirs[0] = data->player.dir_x + data->player.plane_x * camera_x;
-		ray_dirs[1] = data->player.dir_y + data->player.plane_y * camera_x;
-		//double rayDirX = data->player.dir_x + data->player.plane_x * camera_x;
-		//double rayDirY = data->player.dir_y + data->player.plane_y * camera_x;
-
-		map_cords[0] = (int)data->player.x;
-		map_cords[1] = (int)data->player.y;
-
-		//length of ray from current position to next x or y-side
-		double sideDistX;
-		double sideDistY;
-		
-		 //length of ray from one x or y-side to next x or y-side
-		double perpWallDist;
-		
-		//what direction to step in x or y-direction (either +1 or -1)
-		int stepX;
-		int stepY;
-		
-		//int hit = 0; //was there a wall hit?
-		int side; //was a NS or a EW wall hit?
-
-		if (ray_dirs[0] < 0)
-		{
-		  stepX = -1;
-		  sideDistX = (data->player.x - map_cords[0]) * (fabs(1 / ray_dirs[0]));
-		}
-		else
-		{
-		  stepX = 1;
-		  sideDistX = (map_cords[0] + 1.0 - data->player.x) * (fabs(1 / ray_dirs[0]));
-		}
-		if (ray_dirs[1] < 0)
-		{
-		  stepY = -1;
-		  sideDistY = (data->player.y - map_cords[1]) * (fabs(1 / ray_dirs[1]));
-		}
-		else
-		{
-		  stepY = 1;
-		  sideDistY = (map_cords[1] + 1.0 - data->player.y) * (fabs(1 / ray_dirs[1]));
-		}
-
-		//perform DDA
-		while (1)
-		{
-		  //jump to next map square, OR in x-direction, OR in y-direction
-		  if (sideDistX < sideDistY)
-		  {
-		    sideDistX += (fabs(1 / ray_dirs[0]));
-		    map_cords[0] += stepX;
-		    side = 0;
-		  }
-		  else
-		  {
-		    sideDistY +=  (fabs(1 / ray_dirs[1]));
-		    map_cords[1] += stepY;
-		    side = 1;
-		  }
-		  //Check if ray has hit a wall
-		   if (data->map[map_cords[1]][map_cords[0]] == '1')
-			   break;
-				//hit = 1;
-		} 
-		if (side == 0)
-			perpWallDist = (map_cords[0] - data->player.x + (1 - stepX) / 2) / ray_dirs[0];
-      else
-		  perpWallDist = (map_cords[1] - data->player.y + (1 - stepY) / 2) / ray_dirs[1];
-
-		int lineHeight = (int)(data->mlx.mlx_hei / perpWallDist);
-
-      //calculate lowest and highest pixel to fill in current stripe
-      int drawStart = -lineHeight / 2 + data->mlx.mlx_hei / 2;
-      if(drawStart < 0)
-		  drawStart = 0;
-      int drawEnd = lineHeight / 2 + data->mlx.mlx_hei / 2;
-      if (drawEnd >= data->mlx.mlx_hei)
-		  drawEnd = data->mlx.mlx_hei - 1;
-
-	if (side == 0 && ray_dirs[0] > 0) // east
-		data->mlx.chosen_text = &data->mlx.ea_text;
-	else if (side == 0 && ray_dirs[0] < 0) // west
-		data->mlx.chosen_text = &data->mlx.we_text;
-	else if (side == 1 && ray_dirs[1] > 0) // south
-		data->mlx.chosen_text = &data->mlx.so_text;
-	else // north
-		data->mlx.chosen_text = &data->mlx.no_text;
-
-	double wallX; //where exactly the wall was hit
-      if (side == 0)
-		  wallX = data->player.y + perpWallDist * ray_dirs[1];
-      else
-		  wallX = data->player.x + perpWallDist * ray_dirs[0];
-      wallX -= floor((wallX));
-
-      //x coordinate on the texture
-      int texX = (int)(wallX * (double)(data->mlx.chosen_text->wid));
-      if(side == 0 && ray_dirs[0] > 0)
-		  texX = data->mlx.chosen_text->wid - texX - 1;
-      if(side == 1 && ray_dirs[1] < 0)
-		  texX = data->mlx.chosen_text->wid - texX - 1;
-
-	//double step = 1.0 * data->mlx.chosen_text->wid / lineHeight;
-	double tex_pos = (drawStart - data->mlx.mlx_hei
-			/ 2 + lineHeight / 2) * 1.0 * data->mlx.chosen_text->wid
-			/ lineHeight;
-	int y = drawStart;
-	data->mlx.sp_stc.z_buffer[x] = perpWallDist;
-
-	while (y < drawEnd)
-	{
-		int tex_y = (int)tex_pos & (data->mlx.chosen_text->hei - 1);
-		tex_pos += 1.0 * data->mlx.chosen_text->wid / lineHeight;
-		int color = data->mlx.chosen_text->addr[data->mlx.chosen_text->wid * tex_y + texX];
-		(*img)->addr[y * data->mlx.mlx_wid + x] = color;
-		y++;
-	}
+		data->mlx.ray_dirs[0] = data->player.dir_x + data->player.plane_x * (2 * x / (double)data->mlx.mlx_wid - 1);
+		data->mlx.ray_dirs[1] = data->player.dir_y + data->player.plane_y * (2 * x / (double)data->mlx.mlx_wid - 1);
+		data->mlx.map_cords[0] = (int)data->player.x;
+		data->mlx.map_cords[1] = (int)data->player.y;
+		wall_casting(data);
+		wall_casting2(data, &side);
+		wall_casting3(data, side, &perpWallDist);
+		wall_casting4(data, side, perpWallDist, x, img);
+		data->mlx.sp_stc.z_buffer[x] = perpWallDist;
 		x++;
 	}
 

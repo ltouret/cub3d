@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2020/10/28 19:53:57 by ltouret          ###   ########.fr        #
+#    Updated: 2020/11/24 00:19:30 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRCS = srcs/check_key.c srcs/free_tab.c srcs/parsing.c srcs/retrieve_color.c \
 		srcs/read_file.c srcs/init.c srcs/validate_map.c \
 		srcs/retrieve_sprite.c test.c srcs/add_data.c srcs/error.c \
 		srcs/exit.c srcs/sort_sprites.c ray.c build_img.c player_mov.c bmp.c \
-		keypress.c
+		keypress.c wall_casting.c
 
 OBJS = ${SRCS:.c=.o}
 
