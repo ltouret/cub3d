@@ -1,8 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wall_casting.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/25 21:09:19 by ltouret           #+#    #+#             */
+/*   Updated: 2020/11/25 22:11:25 by ltouret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "srcs/cub3d.h"
-#include "mlx.h"
-#include "bmp.h"
-#include "player_mov.h"
-#include <stdio.h>
 #include <math.h>
 
 void	wall_casting(t_data *data)
@@ -54,23 +62,22 @@ void	wall_casting2(t_data *data, int *side)
 	}
 }
 
-//change perpWallDist to unicase
-void	wall_casting3(t_data *data, int side, double *perpWallDist)
+void	wall_casting3(t_data *data, int side)
 {
 	if (side == 0)
-		*perpWallDist = (data->mlx.map_cords[0] - data->player.x +
+		data->mlx.wall_dist = (data->mlx.map_cords[0] - data->player.x +
 			(1 - data->mlx.steps[0]) / 2) / data->mlx.ray_dirs[0];
 	else
-		*perpWallDist = (data->mlx.map_cords[1] - data->player.y +
+		data->mlx.wall_dist = (data->mlx.map_cords[1] - data->player.y +
 			(1 - data->mlx.steps[1]) / 2) / data->mlx.ray_dirs[1];
-	data->mlx.draw[0] = -(int)(data->mlx.mlx_hei / *perpWallDist) /
+	data->mlx.draw_wall[0] = -(int)(data->mlx.mlx_hei / data->mlx.wall_dist) /
 		2 + data->mlx.mlx_hei / 2;
-	if (data->mlx.draw[0] < 0)
-		data->mlx.draw[0] = 0;
-	data->mlx.draw[1] = (int)(data->mlx.mlx_hei / *perpWallDist) /
+	if (data->mlx.draw_wall[0] < 0)
+		data->mlx.draw_wall[0] = 0;
+	data->mlx.draw_wall[1] = (int)(data->mlx.mlx_hei / data->mlx.wall_dist) /
 		2 + data->mlx.mlx_hei / 2;
-	if (data->mlx.draw[1] >= data->mlx.mlx_hei)
-		data->mlx.draw[1] = data->mlx.mlx_hei - 1;
+	if (data->mlx.draw_wall[1] >= data->mlx.mlx_hei)
+		data->mlx.draw_wall[1] = data->mlx.mlx_hei - 1;
 	if (side == 0 && data->mlx.ray_dirs[0] > 0)
 		data->mlx.chosen_text = &data->mlx.ea_text;
 	else if (side == 0 && data->mlx.ray_dirs[0] < 0)
@@ -81,36 +88,42 @@ void	wall_casting3(t_data *data, int side, double *perpWallDist)
 		data->mlx.chosen_text = &data->mlx.no_text;
 }
 
-//void	wall_casting4(t_data *data, int side, double perpWallDist, int x, t_img **img)
-
-void	wall_casting4(t_data *data, int side, double perpWallDist, int x, t_img **img)
+void	wall_casting4(t_data *data, int side, int x, t_img **img)
 {
-	double	wallX;
 	double	tex_pos;
 	int		tex_cords[2];
 	int		color;
 
-	wallX = (side == 0) ? data->player.y + perpWallDist *
+	tex_pos = wall_casting5(data, side, tex_cords);
+	while (data->mlx.draw_wall[0] < data->mlx.draw_wall[1])
+	{
+		tex_cords[1] = (int)tex_pos & (data->mlx.chosen_text->hei - 1);
+		tex_pos += 1.0 * data->mlx.chosen_text->wid /
+			(int)(data->mlx.mlx_hei / data->mlx.wall_dist);
+		color = data->mlx.chosen_text->addr[data->mlx.chosen_text->wid *
+			tex_cords[1] + tex_cords[0]];
+		(*img)->addr[data->mlx.draw_wall[0] * data->mlx.mlx_wid + x] = color;
+		data->mlx.draw_wall[0]++;
+	}
+}
+
+double	wall_casting5(t_data *data, int side, int *tex_cords)
+{
+	double	wall_x;
+	double	tex_pos;
+
+	wall_x = (side == 0) ? data->player.y + data->mlx.wall_dist *
 		data->mlx.ray_dirs[1]
-		: data->player.x + perpWallDist * data->mlx.ray_dirs[0];
-	wallX -= floor((wallX));
-	tex_cords[0] = (int)(wallX * (double)(data->mlx.chosen_text->wid));
+		: data->player.x + data->mlx.wall_dist * data->mlx.ray_dirs[0];
+	wall_x -= floor((wall_x));
+	tex_cords[0] = (int)(wall_x * (double)(data->mlx.chosen_text->wid));
 	if (side == 0 && data->mlx.ray_dirs[0] > 0)
 		tex_cords[0] = data->mlx.chosen_text->wid - tex_cords[0] - 1;
 	if (side == 1 && data->mlx.ray_dirs[1] < 0)
 		tex_cords[0] = data->mlx.chosen_text->wid - tex_cords[0] - 1;
-	tex_pos = (data->mlx.draw[0]- data->mlx.mlx_hei
-			/ 2 + (int)(data->mlx.mlx_hei / perpWallDist) / 2) *
+	tex_pos = (data->mlx.draw_wall[0] - data->mlx.mlx_hei
+			/ 2 + (int)(data->mlx.mlx_hei / data->mlx.wall_dist) / 2) *
 			1.0 * data->mlx.chosen_text->wid /
-			(int)(data->mlx.mlx_hei / perpWallDist);
-	while (data->mlx.draw[0] < data->mlx.draw[1])
-	{
-		tex_cords[1] = (int)tex_pos & (data->mlx.chosen_text->hei - 1);
-		tex_pos += 1.0 * data->mlx.chosen_text->wid /
-			(int)(data->mlx.mlx_hei / perpWallDist);
-		color = data->mlx.chosen_text->addr[data->mlx.chosen_text->wid *
-			tex_cords[1] + tex_cords[0]];
-		(*img)->addr[data->mlx.draw[0] * data->mlx.mlx_wid + x] = color;
-		data->mlx.draw[0]++;
-	}
+			(int)(data->mlx.mlx_hei / data->mlx.wall_dist);
+	return (tex_pos);
 }

@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 02:08:41 by ltouret           #+#    #+#             */
-/*   Updated: 2020/11/25 01:33:22 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/26 00:40:46 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,11 @@ typedef struct		s_sprite
 	int				*sprite_ord;
 	double			**sprite_cords;
 	double			*z_buffer;
+	int				sprite_screen;
+	int				sprite_hei;
+	int				sprite_wid;
+	int				draw_y[2];
+	int				draw_x[2];
 	t_text_img		sp_text;
 }					t_sprite;
 
@@ -100,9 +105,10 @@ typedef struct		s_mlx
 	t_text_img		*chosen_text;
 	int				map_cords[2];
 	int				steps[2];
+	double			wall_dist;
 	double			side_dists[2];
 	double			ray_dirs[2];
-	int				draw[2];
+	int				draw_wall[2];
 }					t_mlx;
 
 typedef struct		s_text_path
@@ -181,25 +187,24 @@ int		add_data(t_data *data);
 void	retrieve_sprite(t_data *data, char *map_line);
 int		init_sprite(t_data *data);
 int		init(int argc, char **argv, t_data **data);
-void	free_data(t_data **data);
 void	print_errors(int err_code);
-void	ray(t_data *data, t_img **img);
-void	draw_vert(t_img **img, int x, int drawStart, t_data *data, int drawEnd, int color);
-void	draw_floor_ceil(t_data *data, t_img **img);
-double	degreeToRadians(double degree);
 int		create_image(t_data *data);
 int		fill_image(t_data *data, t_img **img);
+void	wall_casting(t_data *data);
+void	wall_casting2(t_data *data, int *side);
+void	wall_casting3(t_data *data, int side);
+void	wall_casting4(t_data *data, int side, int x, t_img **img);
+double	wall_casting5(t_data *data, int side, int *tex_cords);
+void	sprite_casting(t_data *data);
+void	sprite_casting1(t_data *data, int i, double *sprite_cam,
+	double *trans_cords);
+void	sprite_casting2(t_data *data, double *trans_cords);
+void	sprite_casting3(t_data *data, double *trans_cords, t_img **img);
+void	sprite_casting4(t_data *data, int tex_x, t_img **img);
 int		keyrelease(int keycode, t_data *data);
 int		keypress(int keycode, t_data *data);
 int		player_movements(t_data *data);
 void	sort_sprites(t_data *data);
 int		exit_pro(void);
-
-//beta
-
-void	wall_casting(t_data *data);
-void	wall_casting2(t_data *data, int *side);
-void	wall_casting3(t_data *data, int side, double *perpWallDist); //maybe use int *side
-void	wall_casting4(t_data *data, int side, double perpWallDist, int x, t_img **img); //maybe use int *side
 
 #endif
