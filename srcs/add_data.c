@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/01 00:34:19 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/17 11:57:49 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/28 17:39:39 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ int		load_text(t_data *data, t_text_img *text_img, char *text_path)
 	if (!(text_img->img = mlx_xpm_file_to_image(data->mlx.mlx, text_path,
 		&text_img->wid, &text_img->hei)))
 		return (ERR_MLX);
-	if (!(text_img->addr = (int *)mlx_get_data_addr(text_img->img, &text_img->bpp,
-		&text_img->size, &text_img->endian)))
+	if (!(text_img->addr = (int *)mlx_get_data_addr(text_img->img,
+		&text_img->bpp, &text_img->size, &text_img->endian)))
 		return (ERR_MLX);
 	return (OK);
 }

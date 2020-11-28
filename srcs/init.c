@@ -6,13 +6,13 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:51:31 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 19:56:17 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/28 17:50:12 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	init_t_map(t_ok_map *map)
+static void	init_t_map(t_ok_map *map)
 {
 	map->r = 0;
 	map->no = 0;
@@ -27,7 +27,7 @@ void	init_t_map(t_ok_map *map)
 	map->map_end = 0;
 }
 
-void	init_data(t_data *data) // separate init to map - player - etc
+static void	init_data(t_data *data)
 {
 	int i;
 
@@ -46,20 +46,11 @@ void	init_data(t_data *data) // separate init to map - player - etc
 	data->text_path.sp = NULL;
 	data->color.f_color = 0;
 	data->color.c_color = 0;
-	data->player.x = 0;
-	data->player.y = 0;
-	data->player.ori = 0;
-	data->player.dir_x = 0;
-	data->player.dir_y = 0;
-	data->player.plane_x = 0;
-	data->player.plane_y = 0;
-	data->player.rot_speed = 0.015;
-	data->player.mov_speed = 0.02;
-	data->player.radius = 5;
 	data->mlx.sp_stc.sprite_num = 0;
+	init_player(data);
 }
 
-int		missing_data(t_ok_map *map)
+int			missing_data(t_ok_map *map)
 {
 	if (map->r == 0)
 		return (ERR_MISS_R);
@@ -84,7 +75,7 @@ int		missing_data(t_ok_map *map)
 	return (OK);
 }
 
-int		handle_args(int argc, char **argv)
+static int	handle_args(int argc, char **argv)
 {
 	if (argc < 2)
 		return (ERR_FEW_ARG);
@@ -95,7 +86,7 @@ int		handle_args(int argc, char **argv)
 	return (OK);
 }
 
-int		init(int argc, char **argv, t_data **data)
+int			init(int argc, char **argv, t_data **data)
 {
 	t_ok_map	map;
 	int			fd;

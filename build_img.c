@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 19:57:10 by ltouret           #+#    #+#             */
-/*   Updated: 2020/11/26 00:36:25 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/28 17:33:47 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	draw_sprite(t_data *data, t_img **img)
 	}
 }
 
-int		fill_image(t_data *data, t_img **img)
+int			fill_image(t_data *data, t_img **img)
 {
 	if (!(*img = malloc(sizeof(t_img))))
 		return (ERR_MAL);
@@ -88,7 +88,7 @@ int		fill_image(t_data *data, t_img **img)
 	return (OK);
 }
 
-int		create_image(t_data *data)
+int			create_image(t_data *data)
 {
 	t_img	*img;
 	int		ret_code;
