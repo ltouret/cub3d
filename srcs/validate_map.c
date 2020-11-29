@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 15:24:57 by ltouret           #+#    #+#             */
-/*   Updated: 2020/10/28 19:52:54 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/29 20:09:32 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,13 @@ static int	add_space_map(char **map)
 
 static int	check_cloture(char **map, int x, int y)
 {
-	if (!(x - 1 >= 0 && y - 1 >= 0 && map[y - 1][x - 1] != ' '))
-		return (ERR_INV_MAP);
 	if (!(x >= 0 && y - 1 >= 0 && map[y - 1][x] != ' '))
-		return (ERR_INV_MAP);
-	if (!(x + 1 >= 0 && y - 1 >= 0 && map[y - 1][x + 1] != ' '))
 		return (ERR_INV_MAP);
 	if (!(x - 1 >= 0 && y >= 0 && map[y][x - 1] != ' '))
 		return (ERR_INV_MAP);
 	if (!(x + 1 >= 0 && y >= 0 && map[y][x + 1] != ' '))
 		return (ERR_INV_MAP);
-	if (!(x - 1 >= 0 && y + 1 >= 0 && map[y + 1][x - 1] != ' '))
-		return (ERR_INV_MAP);
 	if (!(x >= 0 && y + 1 >= 0 && map[y + 1][x] != ' '))
-		return (ERR_INV_MAP);
-	if (!(x + 1 >= 0 && y + 1 >= 0 && map[y + 1][x + 1] != ' '))
 		return (ERR_INV_MAP);
 	return (OK);
 }
