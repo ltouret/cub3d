@@ -1,9 +1,0 @@
-R 520 400
-WE ./textures/bluestone.xpm
-NO ./textures/greystone.xpm
-SO ./textures/wood.xpm
-EA ./textures/redbrick.xp
-S ./textures/barrel.xpm
-
-F 30,0,0
-C 0,200,250
