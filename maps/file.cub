@@ -1,4 +1,4 @@
-R 21474836600 21474836600
+R 640 480
 WE ./textures/GrayWalls.xpm
 EA ./textures/GrayWalls.xpm
 NO ./textures/GrayWalls.xpm
