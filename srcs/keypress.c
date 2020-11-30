@@ -6,7 +6,7 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 12:55:42 by ltouret           #+#    #+#             */
-/*   Updated: 2020/11/28 18:23:40 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/30 11:01:11 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "keys.h"
 #include "player_mov.h"
 
-//TODO erase this
-//this has to be in the Makefile only if at 42
 #define LINUX 1
 
 static int		active_key(t_data *data)

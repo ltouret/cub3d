@@ -6,7 +6,7 @@
 #    By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/20 13:00:20 by ltouret           #+#    #+#              #
-#    Updated: 2020/11/28 18:21:51 by ltouret          ###   ########.fr        #
+#    Updated: 2020/11/30 10:57:07 by ltouret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ INCLUDES	= -I libft -I mlx
 $(NAME): ${OBJS}
 		make -C libft/ 
 		make -C mlx/
-		${CC} ${FSAN} ${OBJS} ${LIBFT_FLAGS} ${MATH_FLAGS} ${MLX_FLAGS} -o ${NAME} 
+		${CC} ${OBJS} ${LIBFT_FLAGS} ${MATH_FLAGS} ${MLX_FLAGS} -o ${NAME} 
 
 all:	${NAME}
 

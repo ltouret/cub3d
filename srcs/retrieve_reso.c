@@ -6,12 +6,11 @@
 /*   By: ltouret <ltouret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 18:09:33 by ltouret           #+#    #+#             */
-/*   Updated: 2020/11/30 10:47:56 by ltouret          ###   ########.fr       */
+/*   Updated: 2020/11/30 11:04:59 by ltouret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include <stdio.h>
 
 static int		num_len(long num)
 {
